@@ -65,11 +65,11 @@ Project Checklist
 - [x] make_dataset.py filled to download needed data
 - [x] Add a model file and a training script and get that running
 - [ ] Done profiling and optimized code
-- [ ] requirements.txt filled with used dependencies
+- [x] requirements.txt filled with used dependencies
 - [ ] Write unit tests for some part of the codebase and get code coverage
 - [x] Get some continues integration running on the github repository
 - [ ] use either tensorboard or wandb to log training progress and other important metrics/artifacts in your code
-- [ ] remember to comply with good coding practices while doing the project
+- [x] remember to comply with good coding practices while doing the project
 
 
 --------
