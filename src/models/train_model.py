@@ -1,6 +1,3 @@
-from src.models.model import model
-import torch
-
 def train(model, device, trainloader, epochs=5, print_every=500):
     steps = 0
     running_loss = 0
@@ -20,5 +17,6 @@ def train(model, device, trainloader, epochs=5, print_every=500):
             if steps % print_every == 0:
 
                 print("Epoch: {}/{}.. ".format(e+1, epochs),
-                      "Training Loss: {:.3f}.. ".format(running_loss/print_every))
+                      "Training Loss: {:.3f}.. "
+                      .format(running_loss/print_every))
                 running_loss = 0
