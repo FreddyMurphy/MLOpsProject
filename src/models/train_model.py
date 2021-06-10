@@ -8,11 +8,11 @@ def train(model, device, trainloader, epochs=5, print_every=500):
     for e in range(epochs):
         # Model in training mode, dropout is on
         batch_idx = 0
-        for images, labels in trainloader:
+        for batch_idx, images in trainloader:
             steps += 1
-            images, labels = images.to(device), labels.to(device)
+            images = images.to(device)
 
-            loss = model.training_step((images, labels), batch_idx)
+            loss = model.training_step(images, batch_idx)
             running_loss += loss.item()
 
             batch_idx += 1
