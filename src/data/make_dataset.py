@@ -7,6 +7,7 @@ import torchvision
 import ssl
 import os
 
+
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
@@ -16,29 +17,29 @@ def main(input_filepath, output_filepath):
     """
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
-    
+
     # Create SSL-context for download
     ssl._create_default_https_context = ssl._create_unverified_context
-    
-    ##### DOWNLOAD HR-IMAGES OF DIV2K  
+
+    # DOWNLOAD HR-IMAGES OF DIV2K
     # Download train set (i.e. image 0-800)
     torchvision.datasets.utils.download_and_extract_archive(
         url='http://data.vision.ee.ethz.ch/cvl/DIV2K/DIV2K_train_HR.zip',
         download_root=input_filepath)
-    
+
     # Delete zip file
     os.remove(input_filepath + '/DIV2K_train_HR.zip')
-    
+
     # Download validation/test set (i.e. image 800-900)
     torchvision.datasets.utils.download_and_extract_archive(
         url='http://data.vision.ee.ethz.ch/cvl/DIV2K/DIV2K_valid_HR.zip',
         download_root=input_filepath)
-    
+
     # Delete zip file
     os.remove(input_filepath + '/DIV2K_valid_HR.zip')
-    
+
     print("Done installing")
-        
+
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
