@@ -27,23 +27,23 @@ class Module(nn.Module):
         #Zero the gradients
         self.optimizer.zero_grad()
 
-        
+
         low_res_i, high_res_i = train_batch
         upscaled_i = self.model(low_res_i)
 
 
         loss = self.criterion(upscaled_i, high_res_i)
-        
+
         #Take a step
         loss.backward()
         self.optimizer.step()
 
-        #TODO: Put logging stuff here... 
+        #TODO: Put logging stuff here...
 
 
         #TODO: We can return more stuff later, if necessary for logging
         return loss
-    
+
     #TODO: To Cuda, sometime
     #Very much similar to training step
     def validation_step(self, val_batch, batch_idx):
@@ -54,20 +54,20 @@ class Module(nn.Module):
         #Zero the gradients
         self.optimizer.zero_grad()
 
-        
+
         low_res_i, high_res_i = val_batch
         upscaled_i = self.model(low_res_i)
 
 
         loss = self.criterion(upscaled_i, high_res_i)
-        
 
-        #TODO: Put logging stuff here... 
+
+        #TODO: Put logging stuff here...
 
 
         #TODO: We can return more stuff later, if necessary for logging
         return loss
-    
+
     #TODO: To Cuda, sometime
     #Very much similar to training step
     def test_step(self, test_batch, batch_idx):
@@ -78,15 +78,15 @@ class Module(nn.Module):
         #Zero the gradients
         self.optimizer.zero_grad()
 
-        
+
         low_res_i, high_res_i = test_batch
         upscaled_i = self.model(low_res_i)
 
 
         loss = self.criterion(upscaled_i, high_res_i)
-        
 
-        #TODO: Put logging stuff here... 
+
+        #TODO: Put logging stuff here...
 
 
         #TODO: We can return more stuff later, if necessary for logging
