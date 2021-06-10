@@ -38,6 +38,9 @@ requirements: test_environment
 
 ## Make Dataset
 data: requirements
+	$(shell mkdir -p data)
+	$(shell mkdir -p data/raw)
+	$(shell mkdir -p data/processed)
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
 ## Delete all compiled Python files
