@@ -4,11 +4,19 @@
 # GLOBALS                                                                       #
 #################################################################################
 
+
+
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = MLOpsProject
-PYTHON_INTERPRETER = C:\Users\frede\anaconda3\python.exe
+OS := $(shell uname)
+
+ifeq ($(OS),Darwin)
+PYTHON_INTERPRETER = python3
+else
+PYTHON_INTERPRETER = python
+endif
 
 export PATH=bin:$$PATH
 
