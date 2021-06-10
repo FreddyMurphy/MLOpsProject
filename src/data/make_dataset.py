@@ -3,7 +3,8 @@ import click
 import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
-
+from torchsr.datasets import Div2K
+import os
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
@@ -14,6 +15,9 @@ def main(input_filepath, output_filepath):
     """
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
+    
+    # dataset = Div2K(root="../../data", download=True)
+    
 
 
 if __name__ == '__main__':
