@@ -27,7 +27,7 @@ def main(input_filepath, output_filepath):
         download_root=input_filepath)
     
     # Delete zip file
-    os.remove(input_filepath + 'DIV2K_train_HR.zip')
+    os.remove(input_filepath + '/DIV2K_train_HR.zip')
     
     # Download validation/test set (i.e. image 800-900)
     torchvision.datasets.utils.download_and_extract_archive(
@@ -35,7 +35,7 @@ def main(input_filepath, output_filepath):
         download_root=input_filepath)
     
     # Delete zip file
-    os.remove(input_filepath + 'DIV2K_valid_HR.zip')
+    os.remove(input_filepath + '/DIV2K_valid_HR.zip')
     
     print("Done installing")
         
