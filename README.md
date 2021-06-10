@@ -62,7 +62,7 @@ Project Checklist
 - [x] All members have write access to repository
 - [x] Using dedicated environment to keep track of packages
 - [x] File structure made using cookiecutter
-- [ ] make_dataset.py filled to download needed data
+- [x] make_dataset.py filled to download needed data
 - [ ] Add a model file and a training script and get that running
 - [ ] Done profiling and optimized code
 - [ ] requirements.txt filled with used dependencies
