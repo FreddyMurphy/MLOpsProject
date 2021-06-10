@@ -4,6 +4,7 @@
 # GLOBALS                                                                       #
 #################################################################################
 
+export PATH := bin:$(PATH)
 
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -12,13 +13,13 @@ PROFILE = default
 PROJECT_NAME = MLOpsProject
 OS := $(shell uname)
 
+
 ifeq ($(OS),Darwin)
 PYTHON_INTERPRETER = python3
 else
 PYTHON_INTERPRETER = python
 endif
 
-export PATH=bin:$$PATH
 
 ifeq (,$(shell where conda))
 HAS_CONDA=False
