@@ -59,9 +59,9 @@ class DIV2KDataModule(LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-    def setup(self):
-        self.div2k_train = DIV2K('data/raw/DIV2K_train_HR')
-        self.div2k_test = DIV2K('data/raw/DIV2K_valid_HR')
+    def setup(self, stage):
+        self.div2k_train = DIV2K(self.data_dir + '/data/raw/DIV2K_train_HR')
+        self.div2k_test = DIV2K(self.data_dir + '/data/raw/DIV2K_valid_HR')
 
         print(len(self.div2k_train))
         print(len(self.div2k_test))

@@ -1,12 +1,13 @@
 import os
 import shutil
-
+import sys
 import wandb
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import WandbLogger
 
 from src.data.dataloader import DIV2KDataModule
 from src.models.model import SRCNN
+
 
 
 def train(trainer, div2k, model):
@@ -18,7 +19,8 @@ def test(trainer, div2k, model):
 
 
 if __name__ == "__main__":
-
+    
+    data_dir = sys.argv[1]
     # Read api key from file
     # File is in gitignore to ensure that key isn't pushed
     use_wandb = True
@@ -38,7 +40,7 @@ if __name__ == "__main__":
         logger = WandbLogger()
 
     # ACTUAL TRAINING AND TESTING
-    div2k = DIV2KDataModule()
+    div2k = DIV2KDataModule(data_dir=data_dir)
     model = SRCNN()
 
     trainer = Trainer(max_epochs=100, logger=logger, gpus=-1)

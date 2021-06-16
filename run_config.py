@@ -26,12 +26,11 @@ compute_targets = ws.compute_targets
 
 datastore = ws.get_default_datastore()
 datastore.upload(src_dir='./data',
-                 target_path='data',
+                 target_path='datasets/data',
                  overwrite=False)
 
-dataset = Dataset.File.from_files(path = (datastore, 'data'))
+dataset = Dataset.File.from_files(path = (datastore, 'datasets'))
 dataset_input = dataset.as_mount()
-print('Input dataset: ' + dataset_input)
 # Run script using the GPU target and env
 config = ScriptRunConfig(
     compute_target = compute_targets['GPU'],
