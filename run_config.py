@@ -1,5 +1,5 @@
 import azureml.core
-from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
+from azureml.core import Dataset, Workspace, Experiment, Environment, ScriptRunConfig
 from azureml.core.conda_dependencies import CondaDependencies
 print("Using azureml-core version", azureml.core.VERSION)
 
@@ -23,12 +23,22 @@ env.python.conda_dependencies = packages
 # I have created both a CPU and GPU compute targets
 compute_targets = ws.compute_targets
 
+
+datastore = ws.get_default_datastore()
+datastore.upload(src_dir='./data',
+                 target_path='data',
+                 overwrite=False)
+
+dataset = Dataset.File.from_files(path = (datastore, 'data'))
+dataset_input = dataset.as_mount()
+print('Input dataset: ' + dataset_input)
 # Run script using the GPU target and env
 config = ScriptRunConfig(
     compute_target = compute_targets['GPU'],
     source_directory = '.',
     script = 'src/models/train_model.py',
-    environment = env
+    environment = env,
+    arguments=[dataset_input]
 )
 
 # Create experiment and run config on it
