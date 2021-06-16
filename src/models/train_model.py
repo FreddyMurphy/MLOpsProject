@@ -41,7 +41,7 @@ if __name__ == "__main__":
     div2k = DIV2KDataModule()
     model = SRCNN()
 
-    trainer = Trainer(max_epochs=100, logger=logger, gpus=0)
+    trainer = Trainer(max_epochs=100, logger=logger, gpus=-1)
 
     train(trainer, div2k, model)
     test(trainer, div2k, model)

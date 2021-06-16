@@ -63,6 +63,9 @@ class DIV2KDataModule(LightningDataModule):
         self.div2k_train = DIV2K('data/raw/DIV2K_train_HR')
         self.div2k_test = DIV2K('data/raw/DIV2K_valid_HR')
 
+        print(len(self.div2k_train))
+        print(len(self.div2k_test))
+        
         self.div2k_train, self.div2k_val = random_split(
             self.div2k_train, [700, 100])
 
