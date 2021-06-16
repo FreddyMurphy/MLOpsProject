@@ -27,3 +27,4 @@ class TestData:
         for index, images in enumerate(dataloader):
             assert len(images) == 2
 
+

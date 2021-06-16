@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-import click
 import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
-import torchvision
-import ssl
 import os
+import ssl
+from pathlib import Path
+
+import click
+import torchvision
+from dotenv import find_dotenv, load_dotenv
 
 
 @click.command()

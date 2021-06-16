@@ -33,6 +33,7 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
+	$(shell touch src/wandb_api_key.txt)
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
@@ -44,7 +45,7 @@ data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
 train:
-	$(PYTHON_INTERPRETER) src/models/train_model.py
+	$(PYTHON_INTERPRETER) src/models/main.py train
 
 ## Delete all compiled Python files
 clean:
