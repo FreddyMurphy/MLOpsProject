@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
-from src.data.dataloader import DIV2K
-from torch.utils.data import DataLoader
 import torch
+from torch.utils.data import DataLoader
+from src.data.dataloader import DIV2K
 
 
 def save_model_output_figs(model):
