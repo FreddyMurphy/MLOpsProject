@@ -59,7 +59,7 @@ class DIV2KDataModule(LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-    def setup(self, stage):
+    def setup(self):
         self.div2k_train = DIV2K('data/raw/DIV2K_train_HR')
         self.div2k_test = DIV2K('data/raw/DIV2K_valid_HR')
 
@@ -86,12 +86,12 @@ class DIV2KDataModule(LightningDataModule):
 
 
 # Testing code
-if __name__ == '__main__':
-    data = DIV2K('../../data/raw/DIV2K_train_HR')
-
-    train = torch.utils.data.DataLoader(data, batch_size=32, shuffle=True)
-
-    index = 0
-    for highres, lowres in train:
-        print(index)
-        index += 1
+#if __name__ == '__main__':
+#    data = DIV2K('../../data/raw/DIV2K_train_HR')
+#
+#    train = torch.utils.data.DataLoader(data, batch_size=32, shuffle=True)
+#
+#    index = 0
+#    for highres, lowres in train:
+#        print(index)
+#        index += 1
