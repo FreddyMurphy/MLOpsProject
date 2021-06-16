@@ -74,8 +74,8 @@ Project Checklist
 
 ### Week 2
 
-- [ ] Setup and used Azure to train your model
-- [ ] Played around with distributed data loading
+- [x] Setup and used Azure to train your model
+- [x] Played around with distributed data loading
 - [x] ~~(not curriculum) Reformated your code in the pytorch lightning format~~
 - [ ] Deployed your model using Azure
 - [ ] Checked how robust your model is towards data drifting
