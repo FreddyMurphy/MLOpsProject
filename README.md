@@ -57,6 +57,7 @@ Project Organization
 Project Checklist
 ------------
 
+### Week 1
 
 - [x] ~~Create a git repository~~
 - [x] ~~All members have write access to repository~~
@@ -70,12 +71,17 @@ Project Checklist
 - [x] ~~Get some continues integration running on the github repository~~
 - [ ] use either tensorboard or wandb to log training progress and other important metrics/artifacts in your code
 - [x] ~~remember to comply with good coding practices while doing the project~~
+
+### Week 2
+
 - [ ] Setup and used Azure to train your model
 - [ ] Played around with distributed data loading
 - [x] ~~(not curriculum) Reformated your code in the pytorch lightning format~~
 - [ ] Deployed your model using Azure
 - [ ] Checked how robust your model is towards data drifting
 - [ ] Deployed your model locally using TorchServe
+
+### Week 3
 
 --------
 
