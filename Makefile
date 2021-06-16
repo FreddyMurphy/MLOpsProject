@@ -43,6 +43,9 @@ data: requirements
 	$(shell mkdir -p data/processed)
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
+train:
+	$(PYTHON_INTERPRETER) src/models/train_model.py
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

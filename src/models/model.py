@@ -2,81 +2,60 @@ import torch
 import torch_enhance
 from torch import nn
 import torch.nn.functional as F
+from pytorch_lightning import LightningModule
+from kornia.losses import SSIMLoss
 
 
-class Module(nn.Module):
+class SRCNN(LightningModule):
 
-    def __init__(self, scaling, n_channels=3, lr=0.001) -> None:
+    def __init__(self, scaling=4, n_channels=3, lr=0.001, window_size = 5) -> None:
         super().__init__()
         self.model = torch_enhance.models.SRCNN(scaling, n_channels)
-        self.optimizer = torch.optim.Adam(self.parameters(), lr=lr)
-        self.criterion = F.mse_loss()  # Put crit here
+        
+        self.lr = lr
+
+        self.criterion = SSIMLoss(window_size)
 
     def forward(self, x):
         return self.model(x)
 
-    # TODO: When we use pytorch lightning,
-    # we will need a method configure_optimizers(self):
-
-    # TODO: To Cuda, maybe later
+    def configure_optimizers(self):
+        return torch.optim.Adam(self.parameters(), lr=self.lr)
+    
     def training_step(self, train_batch, batch_idx):
+        high_res, low_res = train_batch
+        upscaled = self.model(low_res)
 
-        # Model to training mode
-        self.model.train()
+        loss = self.criterion(upscaled, high_res)
+        
+        self.log('train_loss', loss)
+        
+        # TODO: Accuracy
 
-        # Zero the gradients
-        self.optimizer.zero_grad()
-
-        low_res_i, high_res_i = train_batch
-        upscaled_i = self.model(low_res_i)
-
-        loss = self.criterion(upscaled_i, high_res_i)
-
-        # Take a step
-        loss.backward()
-        self.optimizer.step()
-
-        # TODO: Put logging stuff here...
-
-        # TODO: We can return more stuff later, if necessary for logging
         return loss
 
-    # TODO: To Cuda, sometime
     # Very much similar to training step
     def validation_step(self, val_batch, batch_idx):
+        high_res, low_res = val_batch
+        upscaled = self.model(low_res)
 
-        # Model to eval mode
-        self.model.eval()
+        loss = self.criterion(upscaled, high_res)
 
-        # Zero the gradients
-        self.optimizer.zero_grad()
+        self.log('val_loss', loss)
+        
+        # TODO: Accuracy
 
-        low_res_i, high_res_i = val_batch
-        upscaled_i = self.model(low_res_i)
-
-        loss = self.criterion(upscaled_i, high_res_i)
-
-        # TODO: Put logging stuff here...
-
-        # TODO: We can return more stuff later, if necessary for logging
         return loss
 
-    # TODO: To Cuda, sometime
     # Very much similar to training step
     def test_step(self, test_batch, batch_idx):
+        high_res, low_res = test_batch
+        upscaled = self.model(low_res)
 
-        # Model to eval mode
-        self.model.eval()
+        loss = self.criterion(upscaled, high_res)
 
-        # Zero the gradients
-        self.optimizer.zero_grad()
+        self.log('test_loss', loss)
+        
+        # TODO: Accuracy
 
-        low_res_i, high_res_i = test_batch
-        upscaled_i = self.model(low_res_i)
-
-        loss = self.criterion(upscaled_i, high_res_i)
-
-        # TODO: Put logging stuff here...
-
-        # TODO: We can return more stuff later, if necessary for logging
         return loss

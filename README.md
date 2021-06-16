@@ -58,19 +58,24 @@ Project Checklist
 ------------
 
 
-- [x] Create a git repository
-- [x] All members have write access to repository
-- [x] Using dedicated environment to keep track of packages
-- [x] File structure made using cookiecutter
-- [x] make_dataset.py filled to download needed data
-- [x] Add a model file and a training script and get that running
+- [x] ~~Create a git repository~~
+- [x] ~~All members have write access to repository~~
+- [x] ~~Using dedicated environment to keep track of packages~~
+- [x] ~~File structure made using cookiecutter~~
+- [x] ~~make_dataset.py filled to download needed data~~
+- [x] ~~Add a model file and a training script and get that running~~
 - [ ] Done profiling and optimized code
-- [x] requirements.txt filled with used dependencies
+- [x] ~~requirements.txt filled with used dependencies~~
 - [ ] Write unit tests for some part of the codebase and get code coverage
-- [x] Get some continues integration running on the github repository
+- [x] ~~Get some continues integration running on the github repository~~
 - [ ] use either tensorboard or wandb to log training progress and other important metrics/artifacts in your code
-- [x] remember to comply with good coding practices while doing the project
-
+- [x] ~~remember to comply with good coding practices while doing the project~~
+- [ ] Setup and used Azure to train your model
+- [ ] Played around with distributed data loading
+- [x] ~~(not curriculum) Reformated your code in the pytorch lightning format~~
+- [ ] Deployed your model using Azure
+- [ ] Checked how robust your model is towards data drifting
+- [ ] Deployed your model locally using TorchServe
 
 --------
 
