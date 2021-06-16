@@ -11,24 +11,52 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 class Session(object):
 
     def __init__(self):
+        # Setup parsing of arguments
         parser = argparse.ArgumentParser(
             description="Script for either training or evaluating",
             usage="python main.py <command>")
-        parser.add_argument("command", help="Subcommand to run")
-        args = parser.parse_args(sys.argv[1:2])
-        if not hasattr(self, args.command):
-            print('Unkown command')
+        parser.add_argument("command",
+                            metavar='<command>',
+                            help="Subcommand to run; train or validate")
 
+        parser.add_argument('--epochs', '-e',
+                            type=int,
+                            metavar='<integer>',
+                            help='Number of epochs to train',
+                            default=10)
+
+        parser.add_argument('--learning_rate', '-lr',
+                            type=float,
+                            metavar='<float>',
+                            help='Learning rate during training',
+                            default=0.0001)
+
+        parser.add_argument('--load_models_from', '-l',
+                            type=str,
+                            metavar='<string>',
+                            help='Model file path',
+                            default=None)
+
+        args = parser.parse_args()
+
+        # Exit gracefully if wrong command is provided
+        if not hasattr(self, args.command):
+            print('Unkown command:', args.command)
             parser.print_help()
             exit(1)
+
         train_or_validate = getattr(self, args.command)
+
+        self.model = self.setup_model(args.load_models_from,
+                                      args.learning_rate)
+        self.div2k = DIV2KDataModule()
+        self.epochs = args.epochs
+        self.learning_rate = args.learning_rate
+
+        # Init finished, start either train or validate!
         train_or_validate()
 
     def train(self):
-        # Load data and model
-        div2k = DIV2KDataModule()
-        model = self.setup_model()
-
         # We only need a custom checkpoint to save to correct directory
         checkpoint_callback = ModelCheckpoint(
             monitor='val_loss',
@@ -39,35 +67,28 @@ class Session(object):
 
         logger = None  # Make into wandb at some point
 
-        model.train()
-        trainer = Trainer(max_epochs=100,
+        self.model.train()
+        trainer = Trainer(max_epochs=self.epochs,
                           logger=logger,
                           gpus=1,
                           callbacks=[checkpoint_callback])
 
-        train(trainer, div2k, model)
+        train(trainer, self.div2k, self.model)
 
     def validate(self):
-        div2k = DIV2KDataModule()
-        model = self.setup_model()
-
         logger = None  # Make into wandb at some point
-        trainer = Trainer(max_epochs=100, logger=logger, gpus=1)
+        trainer = Trainer(max_epochs=self.epochs, logger=logger, gpus=1)
 
-        model.eval()
-        test(trainer, div2k, model)
-        predictor.save_model_output_figs(model)
+        self.model.eval()
+        test(trainer, self.div2k, self.model)
+        predictor.save_model_output_figs(self.model)
 
-    def setup_model(self):
-        parser = argparse.ArgumentParser(description='Training arguments')
-        parser.add_argument('--load_model_from', default="")
-        args = parser.parse_args(sys.argv[2:])
-
-        model = SRCNN()
+    def setup_model(self, path, learning_rate):
+        model = SRCNN(lr=learning_rate)
 
         # Load model from checkpoint in case it was specificed
-        if args.load_model_from:
-            model = SRCNN.load_from_checkpoint(args.load_model_from)
+        if path:
+            model = SRCNN.load_from_checkpoint(path)
 
         return model
 
