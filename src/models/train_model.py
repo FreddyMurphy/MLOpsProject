@@ -1,10 +1,12 @@
-from src.models.model import SRCNN
-from src.data.dataloader import DIV2KDataModule
-from pytorch_lightning import Trainer
-import wandb
-from pytorch_lightning.loggers import WandbLogger
 import os
 import shutil
+
+import wandb
+from pytorch_lightning import Trainer
+from pytorch_lightning.loggers import WandbLogger
+
+from src.data.dataloader import DIV2KDataModule
+from src.models.model import SRCNN
 
 '''
 def train(model, device, trainloader, epochs=5, print_every=500):

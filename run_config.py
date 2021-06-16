@@ -1,6 +1,7 @@
 import azureml.core
-from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
+from azureml.core import Environment, Experiment, ScriptRunConfig, Workspace
 from azureml.core.conda_dependencies import CondaDependencies
+
 print("Using azureml-core version", azureml.core.VERSION)
 
 # Get workspace from local config file (download through azure portal)

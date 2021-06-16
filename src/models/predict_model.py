@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-from src.models.model import SRCNN
-from src.data.dataloader import DIV2K
-from torch.utils.data import DataLoader
 import torch
+from torch.utils.data import DataLoader
 
+from src.data.dataloader import DIV2K
+from src.models.model import SRCNN
 
 if __name__ == '__main__':
     model = SRCNN()

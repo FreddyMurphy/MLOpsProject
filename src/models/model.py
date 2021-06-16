@@ -1,9 +1,9 @@
 import torch
-import torch_enhance
-from torch import nn
 import torch.nn.functional as F
-from pytorch_lightning import LightningModule
+import torch_enhance
 from kornia.losses import SSIMLoss
+from pytorch_lightning import LightningModule
+from torch import nn
 
 
 class SRCNN(LightningModule):
