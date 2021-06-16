@@ -69,7 +69,7 @@ Project Checklist
 - [x] ~~requirements.txt filled with used dependencies~~
 - [ ] Write unit tests for some part of the codebase and get code coverage
 - [x] ~~Get some continues integration running on the github repository~~
-- [ ] use either tensorboard or wandb to log training progress and other important metrics/artifacts in your code
+- [x] ~~use either tensorboard or wandb to log training progress and other important metrics/artifacts in your code~~
 - [x] ~~remember to comply with good coding practices while doing the project~~
 
 ### Week 2
