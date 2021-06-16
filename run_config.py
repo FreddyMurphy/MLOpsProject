@@ -11,7 +11,10 @@ ws = Workspace.from_config()
 env = Environment(workspace=ws, name="pytorch_env")
 
 # Set dependencies of env (could also have used a dependencies.txt file instead)
-packages = CondaDependencies('requirements.txt')
+packages = CondaDependencies.create(conda_packages=['pip', 'pytorch','python==3.7', 'joblib'],
+                                    pip_packages=['azureml-defaults', 'torchvision==0.7.0',
+                                                  'pytorch_lightning', 'wandb'])
+packages.merge_requirements('requirements.txt')
 env.python.conda_dependencies = packages
 
 # I have created both a CPU and GPU compute targets
@@ -26,6 +29,6 @@ config = ScriptRunConfig(
 )
 
 # Create experiment and run config on it
-experiment_name = "Train SRCNN"
+experiment_name = "Train_SRCNN"
 exp = Experiment(ws, experiment_name)
 run = exp.submit(config)
