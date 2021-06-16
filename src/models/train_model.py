@@ -37,8 +37,6 @@ if __name__ == "__main__":
         wandb.init(entity='MLOps14', project="DIV2K")
         logger = WandbLogger()
 
-    wandb.log({"Test2": 123})
-
     # ACTUAL TRAINING AND TESTING
     div2k = DIV2KDataModule()
     model = SRCNN()
