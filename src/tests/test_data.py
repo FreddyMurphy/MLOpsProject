@@ -22,12 +22,3 @@ class TestData:
     def test_shape_of_images(self):
         for index, images in div2k_test:
              assert len(images) == 2
-
-    # Test that each label is reresented once
-    def test_occurance_of_labels_train(self):
-        label_set = set()
-        test_labels = list(range(0, 10))
-        for images, labels in train_dataset:
-            label_set.add(labels.item())
-
-        assert test_labels == list(label_set)

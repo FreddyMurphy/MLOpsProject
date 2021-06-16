@@ -1,10 +1,11 @@
-import torch
-from torchvision.transforms import Compose, ToTensor
-from PIL import Image
-import kornia
 import glob
-from torch.utils.data import DataLoader, random_split
+
+import kornia
+import torch
+from PIL import Image
 from pytorch_lightning import LightningDataModule
+from torch.utils.data import DataLoader, random_split
+from torchvision.transforms import Compose, ToTensor
 
 
 class DIV2K(torch.utils.data.Dataset):
@@ -13,7 +14,7 @@ class DIV2K(torch.utils.data.Dataset):
                  lr_trans=None,
                  hr_trans=None,
                  scale_factor=0.25,
-                 image_size = (256, 256)):
+                 image_size=(256, 256)):
 
         self.img_dir = img_dir
         self.img_labels = glob.glob(self.img_dir + '/*.png')
@@ -39,39 +40,50 @@ class DIV2K(torch.utils.data.Dataset):
         """Returns HR to LR image transformations"""
         return Compose([
             ToTensor(),
-            kornia.geometry.Resize(self.image_size, align_corners=False),   
+            kornia.geometry.Resize(self.image_size, align_corners=False),
             kornia.geometry.Rescale(self.scale_factor)])
 
-    # TODO: Check if this function does what it should
     def get_hr_transforms(self):
         """Returns HR image transformations"""
         return Compose([
             ToTensor(),
             kornia.geometry.Resize(self.image_size, align_corners=False)])
 
+
 class DIV2KDataModule(LightningDataModule):
-    
-    def __init__(self, data_dir: str = '', batch_size: int = 8, num_workers: int = 4):
+    def __init__(self, data_dir: str = '',
+                 batch_size: int = 8,
+                 num_workers: int = 4):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
-        
+
     def setup(self, stage):
         self.div2k_train = DIV2K('data/raw/DIV2K_train_HR')
         self.div2k_test = DIV2K('data/raw/DIV2K_valid_HR')
 
-        self.div2k_train, self.div2k_val = random_split(self.div2k_train, [700, 100])
-        
+        self.div2k_train, self.div2k_val = random_split(
+            self.div2k_train, [700, 100])
+
     def train_dataloader(self):
-        return DataLoader(self.div2k_train, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True)
-    
+        return DataLoader(self.div2k_train,
+                          batch_size=self.batch_size,
+                          num_workers=self.num_workers,
+                          shuffle=True)
+
     def val_dataloader(self):
-        return DataLoader(self.div2k_val, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=False)
-    
+        return DataLoader(self.div2k_val,
+                          batch_size=self.batch_size,
+                          num_workers=self.num_workers,
+                          shuffle=False)
+
     def test_dataloader(self):
-        return DataLoader(self.div2k_test, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=False)
-    
+        return DataLoader(self.div2k_test,
+                          batch_size=self.batch_size,
+                          num_workers=self.num_workers,
+                          shuffle=False)
+
 
 # Testing code
 if __name__ == '__main__':
