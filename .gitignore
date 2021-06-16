@@ -89,4 +89,4 @@ target/
 .mypy_cache/
 
 # api keys
-wandb_api_key.txt
+src/wandb_api_key.txt
