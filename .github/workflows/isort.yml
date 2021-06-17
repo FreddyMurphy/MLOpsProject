@@ -20,8 +20,12 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A && git diff-index --cached --quiet HEAD || git commit -m 'isort'
 
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
         with:
-          destination_branch: "master"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: isort action fixes
+          title: Fixes by isort action
+          body: This is an auto-generated PR with fixes by isort.
+          labels: isort, automated pr
+          reviewers: philipwastakenwastaken
+          branch: isort-patches

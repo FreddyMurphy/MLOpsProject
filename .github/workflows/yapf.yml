@@ -1,7 +1,7 @@
 name: Format python code
 on: push
 jobs:
-  autopep8:
+  yapf:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,9 +13,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          commit-message: autopep8 action fixes
-          title: Fixes by autopep8 action
-          body: This is an auto-generated PR with fixes by autopep8.
-          labels: autopep8, automated pr
+          commit-message: yapf action fixes
+          title: Fixes by yapf action
+          body: This is an auto-generated PR with fixes by yapf.
+          labels: yapf, automated pr
           reviewers: philipwastakenwastaken
-          branch: autopep8-patches
+          branch: yapf-patches
