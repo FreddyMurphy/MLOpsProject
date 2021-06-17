@@ -8,6 +8,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+venv/
 build/
 develop-eggs/
 dist/
@@ -89,4 +90,5 @@ target/
 .mypy_cache/
 
 # api keys
-src/wandb_api_key.txt
+wandb_api_key.txt
+config.json

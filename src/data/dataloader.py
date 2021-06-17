@@ -56,6 +56,7 @@ class DIV2KDataModule(LightningDataModule):
                  num_workers: int = 4):
         super().__init__()
         self.data_dir = data_dir
+        print("INSIDE DATA DIR:", self.data_dir + '/data/raw/DIV2K_train_HR')
         self.batch_size = batch_size
         self.num_workers = num_workers
 
@@ -65,7 +66,7 @@ class DIV2KDataModule(LightningDataModule):
 
         print(len(self.div2k_train))
         print(len(self.div2k_test))
-        
+
         self.div2k_train, self.div2k_val = random_split(
             self.div2k_train, [700, 100])
 
@@ -86,15 +87,3 @@ class DIV2KDataModule(LightningDataModule):
                           batch_size=self.batch_size,
                           num_workers=self.num_workers,
                           shuffle=False)
-
-
-# Testing code
-#if __name__ == '__main__':
-#    data = DIV2K('../../data/raw/DIV2K_train_HR')
-#
-#    train = torch.utils.data.DataLoader(data, batch_size=32, shuffle=True)
-#
-#    index = 0
-#    for highres, lowres in train:
-#        print(index)
-#        index += 1
