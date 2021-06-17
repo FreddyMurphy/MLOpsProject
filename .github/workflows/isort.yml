@@ -20,7 +20,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A && git diff-index --cached --quiet HEAD || git commit -m 'isort'
 
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.5.0
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
         with:
+          destination_branch: "main"
           github_token: ${{ secrets.GITHUB_TOKEN }}
