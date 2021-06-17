@@ -1,6 +1,6 @@
 import azureml.core
-from azureml.core import (Dataset, Workspace, Experiment,
-                          Environment, ScriptRunConfig)
+from azureml.core import (Dataset, Environment, Experiment, ScriptRunConfig,
+                          Workspace)
 from azureml.core.conda_dependencies import CondaDependencies
 
 # Training arguments

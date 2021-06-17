@@ -1,13 +1,15 @@
-import shutil
 import argparse
-from src.models.model import SRCNN
-from src.data.dataloader import DIV2KDataModule
-from src.models.train_model import train, test
-import src.models.predict_model as predictor
+import shutil
+
+import wandb
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
-import wandb
+
+import src.models.predict_model as predictor
+from src.data.dataloader import DIV2KDataModule
+from src.models.model import SRCNN
+from src.models.train_model import test, train
 
 
 class Session(object):
