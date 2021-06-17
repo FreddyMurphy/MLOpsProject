@@ -86,7 +86,6 @@ pygments_style = 'sphinx'
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
 
-
 # -- Options for HTML output ---------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -166,7 +165,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'MLOpsProjectdoc'
 
-
 # -- Options for LaTeX output -----------------------------------
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
@@ -183,9 +181,7 @@ latex_elements = {
 # (source start file, target name, title, author,
 # documentclass [howto/manual]).
 latex_documents = [
-    ('index',
-     'MLOpsProject.tex',
-     u'MLOpsProject Documentation',
+    ('index', 'MLOpsProject.tex', u'MLOpsProject Documentation',
      u"Frederik Nyborg", 'manual'),
 ]
 
@@ -209,19 +205,15 @@ latex_documents = [
 # If false, no module index is generated.
 # latex_domain_indices = True
 
-
 # -- Options for manual page output ----------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'MLOpsProject', u'MLOpsProject Documentation',
-     [u"Frederik Nyborg"], 1)
-]
+man_pages = [('index', 'MLOpsProject', u'MLOpsProject Documentation',
+              [u"Frederik Nyborg"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
-
 
 # -- Options for Texinfo output ---------------------------------
 
@@ -230,8 +222,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'MLOpsProject', u'MLOpsProject Documentation',
-     u"Frederik Nyborg", 'MLOpsProject',
-     'A project for the MLOps course', 'Miscellaneous'),
+     u"Frederik Nyborg", 'MLOpsProject', 'A project for the MLOps course',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
