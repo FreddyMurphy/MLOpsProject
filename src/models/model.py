@@ -6,7 +6,6 @@ from torch_enhance import metrics
 
 
 class SRCNN(LightningModule):
-
     def __init__(self, scaling=4, n_channels=3, lr=0.001, window_size=5):
         super().__init__()
         self.model = torch_enhance.models.SRCNN(scaling, n_channels)
