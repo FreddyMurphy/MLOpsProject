@@ -13,7 +13,6 @@ from src.models.train_model import test, train
 
 
 class Session(object):
-
     def __init__(self):
         # Setup parsing of arguments
         parser = argparse.ArgumentParser(
@@ -23,31 +22,36 @@ class Session(object):
                             metavar='<command>',
                             help="Subcommand to run; train or evaluate")
 
-        parser.add_argument('--epochs', '-e',
+        parser.add_argument('--epochs',
+                            '-e',
                             type=int,
                             metavar='<integer>',
                             help='Number of epochs to train',
                             default=10)
 
-        parser.add_argument('--learning_rate', '-lr',
+        parser.add_argument('--learning_rate',
+                            '-lr',
                             type=float,
                             metavar='<float>',
                             help='Learning rate during training',
                             default=0.0001)
 
-        parser.add_argument('--load_models_from', '-l',
+        parser.add_argument('--load_models_from',
+                            '-l',
                             type=str,
                             metavar='<string>',
                             help='Model file path',
                             default=None)
 
-        parser.add_argument('--data_dir', '-d',
+        parser.add_argument('--data_dir',
+                            '-d',
                             type=str,
                             metavar='<string>',
                             help='Data file path',
                             default='.')
 
-        parser.add_argument('--wandb_api_key', '-wd',
+        parser.add_argument('--wandb_api_key',
+                            '-wd',
                             type=str,
                             metavar='<string>',
                             help='API key from wandb',
@@ -88,8 +92,7 @@ class Session(object):
             self.use_wandb = True
 
         if not self.use_wandb:
-            print("wandb API key not found..."
-                  "Cannot use WandB...")
+            print("wandb API key not found..." "Cannot use WandB...")
 
         self.logger = None
 
