@@ -41,17 +41,20 @@ class DIV2K(torch.utils.data.Dataset):
         return Compose([
             ToTensor(),
             kornia.geometry.Resize(self.image_size, align_corners=False),
-            kornia.geometry.Rescale(self.scale_factor)])
+            kornia.geometry.Rescale(self.scale_factor)
+        ])
 
     def get_hr_transforms(self):
         """Returns HR image transformations"""
         return Compose([
             ToTensor(),
-            kornia.geometry.Resize(self.image_size, align_corners=False)])
+            kornia.geometry.Resize(self.image_size, align_corners=False)
+        ])
 
 
 class DIV2KDataModule(LightningDataModule):
-    def __init__(self, data_dir: str = '',
+    def __init__(self,
+                 data_dir: str = '',
                  batch_size: int = 8,
                  num_workers: int = 4):
         super().__init__()

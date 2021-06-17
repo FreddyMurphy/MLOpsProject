@@ -9,7 +9,6 @@ LEARNING_RATE = 0.0001
 
 print("Using azureml-core version", azureml.core.VERSION)
 
-
 # Get workspace from local config file (download through azure portal)
 ws = Workspace.from_config()
 
@@ -42,8 +41,9 @@ dataset = Dataset.File.from_files(path=(datastore, 'datasets'))
 dataset_input = dataset.as_mount()
 
 # Define arguments for config
-arguments = ['train', '-e', EPOCHS, '-lr', LEARNING_RATE,
-             '--data_dir', dataset_input]
+arguments = [
+    'train', '-e', EPOCHS, '-lr', LEARNING_RATE, '--data_dir', dataset_input
+]
 
 # If wandb api key is defined, then send value
 # as argument to enable usage of wandb logger
