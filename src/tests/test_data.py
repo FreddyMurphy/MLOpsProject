@@ -1,5 +1,4 @@
 import torch
-from torch.utils.data import DataLoader
 
 from src.data.dataloader import DIV2K, DIV2KDataModule
 
