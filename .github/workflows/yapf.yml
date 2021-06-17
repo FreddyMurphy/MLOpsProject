@@ -34,7 +34,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -A && git diff-index --cached --quiet HEAD || git commit -m 'isort'
+        git add -A && git diff-index --cached --quiet HEAD || git commit -m 'yapf'
 
     - name: pull-request
       uses: repo-sync/pull-request@v2
