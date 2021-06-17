@@ -9,7 +9,6 @@ data_module.setup()
 
 
 class TestData:
-
     # Test for checking the length of the training dataset
     def test_len_of_train(self):
         assert len(div2k_train) == 800
