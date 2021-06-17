@@ -26,7 +26,7 @@ class SRCNN(LightningModule):
         upscaled = self.model(low_res)
 
         loss = self.criterion(upscaled, high_res)
-        
+
         # metrics
         # Mean absolute error
         mae = metrics.mae(upscaled, high_res)
@@ -62,7 +62,6 @@ class SRCNN(LightningModule):
         self.log("train_loss", loss)
         self.log("train_mae", mae)
         self.log("train_psnr", psnr)
-
 
         # TODO: Accuracy
 
