@@ -1,7 +1,5 @@
-# local package
 -e .
-
-# Required packages
+azureml-defaults
 absl-py==0.13.0
 aiohttp==3.7.4.post0
 alabaster==0.7.12
@@ -13,7 +11,7 @@ awscli==1.19.95
 Babel==2.9.1
 botocore==1.20.95
 cachetools==4.2.2
-certifi==2021.5.30
+certifi
 chardet==4.0.0
 click==8.0.1
 colorama==0.4.3
@@ -84,3 +82,4 @@ Werkzeug==2.0.1
 wandb
 wincertstore==0.2
 yarl==1.6.3
+azureml-dataset-runtime

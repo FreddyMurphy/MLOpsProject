@@ -45,6 +45,12 @@ class Session(object):
                             help='Data file path',
                             default='.')
 
+        parser.add_argument('--wandb_api_key', '-wd',
+                            type=str,
+                            metavar='<string>',
+                            help='API key from wandb',
+                            default=None)
+
         args = parser.parse_args()
 
         # Exit gracefully if wrong command is provided
@@ -59,11 +65,13 @@ class Session(object):
                                       args.learning_rate)
 
         self.data_dir = args.data_dir
-        print("DATA DIR", self.data_dir)
         self.div2k = DIV2KDataModule(data_dir=self.data_dir)
         self.epochs = args.epochs
         self.learning_rate = args.learning_rate
 
+        # Try to find the wandb API key. The key can either be
+        # passed as an argument (for use in Azure), or given in
+        # the wandb_api_key.txt file.
         self.use_wandb = True
         try:
             with open("wandb_api_key.txt", encoding='utf-8') as f:
@@ -71,9 +79,15 @@ class Session(object):
                 if key == '':
                     raise Exception()
         except Exception:
-            print("wandb_api_key.txt file not found containing api key"
-                  "cannot use WandB...")
             self.use_wandb = False
+
+        if args.wandb_api_key:
+            key = args.wandb_api_key
+            self.use_wandb = True
+
+        if not self.use_wandb:
+            print("wandb API key not found..."
+                  "Cannot use WandB...")
 
         self.logger = None
 
