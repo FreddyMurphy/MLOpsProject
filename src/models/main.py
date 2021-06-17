@@ -1,34 +1,107 @@
-import sys
 import argparse
-from src.models.model import SRCNN
-from src.data.dataloader import DIV2KDataModule
-from src.models.train_model import train, test
-import src.models.predict_model as predictor
+import shutil
+
+import wandb
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.loggers import WandbLogger
+
+import src.models.predict_model as predictor
+from src.data.dataloader import DIV2KDataModule
+from src.models.model import SRCNN
+from src.models.train_model import test, train
 
 
 class Session(object):
 
     def __init__(self):
+        # Setup parsing of arguments
         parser = argparse.ArgumentParser(
             description="Script for either training or evaluating",
             usage="python main.py <command>")
-        parser.add_argument("command", help="Subcommand to run")
-        args = parser.parse_args(sys.argv[1:2])
-        if not hasattr(self, args.command):
-            print('Unkown command')
+        parser.add_argument("command",
+                            metavar='<command>',
+                            help="Subcommand to run; train or evaluate")
 
+        parser.add_argument('--epochs', '-e',
+                            type=int,
+                            metavar='<integer>',
+                            help='Number of epochs to train',
+                            default=10)
+
+        parser.add_argument('--learning_rate', '-lr',
+                            type=float,
+                            metavar='<float>',
+                            help='Learning rate during training',
+                            default=0.0001)
+
+        parser.add_argument('--load_models_from', '-l',
+                            type=str,
+                            metavar='<string>',
+                            help='Model file path',
+                            default=None)
+
+        parser.add_argument('--data_dir', '-d',
+                            type=str,
+                            metavar='<string>',
+                            help='Data file path',
+                            default='.')
+
+        parser.add_argument('--wandb_api_key', '-wd',
+                            type=str,
+                            metavar='<string>',
+                            help='API key from wandb',
+                            default=None)
+
+        args = parser.parse_args()
+
+        # Exit gracefully if wrong command is provided
+        if not hasattr(self, args.command):
+            print('Unkown command:', args.command)
             parser.print_help()
             exit(1)
-        train_or_validate = getattr(self, args.command)
-        train_or_validate()
+
+        train_or_evaluate = getattr(self, args.command)
+
+        self.model = self.setup_model(args.load_models_from,
+                                      args.learning_rate)
+
+        self.data_dir = args.data_dir
+        self.div2k = DIV2KDataModule(data_dir=self.data_dir)
+        self.epochs = args.epochs
+        self.learning_rate = args.learning_rate
+
+        # Try to find the wandb API key. The key can either be
+        # passed as an argument (for use in Azure), or given in
+        # the wandb_api_key.txt file.
+        self.use_wandb = True
+        try:
+            with open("wandb_api_key.txt", encoding='utf-8') as f:
+                key = f.read()
+                if key == '':
+                    raise Exception()
+        except Exception:
+            self.use_wandb = False
+
+        if args.wandb_api_key:
+            key = args.wandb_api_key
+            self.use_wandb = True
+
+        if not self.use_wandb:
+            print("wandb API key not found..."
+                  "Cannot use WandB...")
+
+        self.logger = None
+
+        if (self.use_wandb):
+            wandb.login(key=key)
+            wandb.init(entity='MLOps14', project="DIV2K")
+            self.logger = WandbLogger()
+
+        # Init finished, start either train or validate!
+        train_or_evaluate()
 
     def train(self):
-        # Load data and model
-        div2k = DIV2KDataModule()
-        model = self.setup_model()
-
         # We only need a custom checkpoint to save to correct directory
         checkpoint_callback = ModelCheckpoint(
             monitor='val_loss',
@@ -37,37 +110,32 @@ class Session(object):
             save_top_k=1,
             mode='min')
 
-        logger = None  # Make into wandb at some point
-
-        model.train()
-        trainer = Trainer(max_epochs=100,
-                          logger=logger,
+        trainer = Trainer(max_epochs=self.epochs,
+                          logger=self.logger,
                           gpus=1,
                           callbacks=[checkpoint_callback])
 
-        train(trainer, div2k, model)
+        train(trainer, self.div2k, self.model)
 
-    def validate(self):
-        div2k = DIV2KDataModule()
-        model = self.setup_model()
+        if (self.use_wandb):
+            wandb.finish()
 
-        logger = None  # Make into wandb at some point
-        trainer = Trainer(max_epochs=100, logger=logger, gpus=1)
+            # Delete local wandb files
+            # print(os.path.abspath(os.getcwd()))
+            shutil.rmtree('wandb')
 
-        model.eval()
-        test(trainer, div2k, model)
-        predictor.save_model_output_figs(model)
+    def evaluate(self):
+        trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
 
-    def setup_model(self):
-        parser = argparse.ArgumentParser(description='Training arguments')
-        parser.add_argument('--load_model_from', default="")
-        args = parser.parse_args(sys.argv[2:])
+        test(trainer, self.div2k, self.model)
+        predictor.save_model_output_figs(self.model)
 
-        model = SRCNN()
+    def setup_model(self, path, learning_rate):
+        model = SRCNN(lr=learning_rate)
 
         # Load model from checkpoint in case it was specificed
-        if args.load_model_from:
-            model = SRCNN.load_from_checkpoint(args.load_model_from)
+        if path:
+            model = SRCNN.load_from_checkpoint(path)
 
         return model
 
