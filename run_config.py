@@ -1,10 +1,10 @@
 import azureml.core
 from azureml.core import (Dataset, Workspace, Experiment,
-                          Environment, ScriptRunConfig)
+                          Environment, Model, ScriptRunConfig)
 from azureml.core.conda_dependencies import CondaDependencies
 
 # Training arguments
-EPOCHS = 10
+EPOCHS = 1
 LEARNING_RATE = 0.0001
 
 print("Using azureml-core version", azureml.core.VERSION)
@@ -69,11 +69,16 @@ experiment_name = "Train_SRCNN"
 exp = Experiment(ws, experiment_name)
 run = exp.submit(config)
 
-run.upload_file(name='outputs/div2k_model.pkl',
-                path_or_stream='./div2k_model.pkl')
 run.wait_for_completion(show_output=True)
+
+# run.upload_file(name='outputs/div2k_model.pkl', path_or_stream='./div2k_model.pkl')
+
+run.complete()
 
 # Register the model
 run.register_model(model_path='outputs/div2k_model.pkl',
                    model_name='div2k_model',
                    tags={'Training context': 'Inline Training'})
+
+for model in Model.list(ws):
+    print(model.name, 'version:', model.version)

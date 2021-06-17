@@ -1,5 +1,6 @@
 import argparse
 import joblib
+import os
 import shutil
 from src.models.model import SRCNN
 from src.data.dataloader import DIV2KDataModule
@@ -125,7 +126,8 @@ class Session(object):
 
         # Save the trained model
         model_file = 'div2k_model.pkl'
-        joblib.dump(value=self.model, filename=model_file)
+        os.makedirs('outputs', exist_ok=True)
+        joblib.dump(value=self.model, filename='outputs/' + model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
