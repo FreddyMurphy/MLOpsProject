@@ -1,6 +1,7 @@
 import torch
-from src.data.dataloader import DIV2K, DIV2KDataModule
 from torch.utils.data import DataLoader
+
+from src.data.dataloader import DIV2K, DIV2KDataModule
 
 div2k_train = DIV2K('data/raw/DIV2K_train_HR')
 div2k_test = DIV2K('data/raw/DIV2K_valid_HR')
