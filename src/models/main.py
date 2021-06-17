@@ -1,5 +1,6 @@
-import shutil
 import argparse
+import joblib
+import shutil
 from src.models.model import SRCNN
 from src.data.dataloader import DIV2KDataModule
 from src.models.train_model import train, test
@@ -121,6 +122,10 @@ class Session(object):
             # Delete local wandb files
             # print(os.path.abspath(os.getcwd()))
             shutil.rmtree('wandb')
+
+        # Save the trained model
+        model_file = 'div2k_model.pkl'
+        joblib.dump(value=self.model, filename=model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)

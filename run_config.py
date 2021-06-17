@@ -68,4 +68,12 @@ config = ScriptRunConfig(compute_target=compute_targets['GPU'],
 experiment_name = "Train_SRCNN"
 exp = Experiment(ws, experiment_name)
 run = exp.submit(config)
+
+run.upload_file(name='outputs/div2k_model.pkl',
+                path_or_stream='./div2k_model.pkl')
 run.wait_for_completion(show_output=True)
+
+# Register the model
+run.register_model(model_path='outputs/div2k_model.pkl',
+                   model_name='div2k_model',
+                   tags={'Training context': 'Inline Training'})
