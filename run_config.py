@@ -71,8 +71,6 @@ run = exp.submit(config)
 
 run.wait_for_completion(show_output=True)
 
-# run.upload_file(name='outputs/div2k_model.pkl', path_or_stream='./div2k_model.pkl')
-
 run.complete()
 
 # Register the model
