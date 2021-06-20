@@ -96,6 +96,7 @@ dependencies:
   - wincertstore==0.2
   - yarl==1.6.3
   - azureml-dataset-runtime~=1.30.0
+  - git+https://github.com/FreddyMurphy/MLOpsProject@master#egg=src
 - pip
 - pytorch
 - joblib

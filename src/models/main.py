@@ -1,4 +1,5 @@
 import argparse
+import copy
 import joblib
 import os
 import shutil
@@ -9,6 +10,7 @@ import src.models.predict_model as predictor
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
+import torch
 import wandb
 
 
@@ -127,7 +129,7 @@ class Session(object):
         # Save the trained model
         model_file = 'div2k_model.pkl'
         os.makedirs('outputs', exist_ok=True)
-        joblib.dump(value=self.model, filename='outputs/' + model_file)
+        joblib.dump(value=self.model.state_dict(), filename='outputs/' + model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
