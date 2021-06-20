@@ -43,8 +43,8 @@ deployment_config = AciWebservice.deploy_configuration(cpu_cores=1,
 
 service_name = "upscale-service"
 
-service = Model.deploy(ws, service_name, [model],
-                       inference_config, deployment_config)
+service = Model.deploy(ws, service_name, [model], inference_config,
+                       deployment_config)
 
 service.wait_for_deployment(True)
 print(service.get_logs())
