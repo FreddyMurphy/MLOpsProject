@@ -1,6 +1,8 @@
 import argparse
+import os
 import shutil
 
+import joblib
 import wandb
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -126,6 +128,11 @@ class Session(object):
             # Delete local wandb files
             # print(os.path.abspath(os.getcwd()))
             shutil.rmtree('wandb')
+
+        # Save the trained model
+        model_file = 'div2k_model.pkl'
+        os.makedirs('outputs', exist_ok=True)
+        joblib.dump(value=self.model.state_dict(), filename='outputs/' + model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)

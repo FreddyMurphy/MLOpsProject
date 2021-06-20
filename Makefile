@@ -33,7 +33,7 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	$(shell touch src/wandb_api_key.txt)
+	$(shell touch wandb_api_key.txt)
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
 
