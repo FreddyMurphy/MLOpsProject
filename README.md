@@ -78,7 +78,7 @@ Project Checklist
 - [x] ~~Played around with distributed data loading~~
 - [x] ~~(not curriculum) Reformated your code in the pytorch lightning format~~
 - [ ] Deployed your model using Azure
-- [ ] Checked how robust your model is towards data drifting
+- [ ] ~~Checked how robust your model is towards data drifting~~
 - [ ] Deployed your model locally using TorchServe
 
 ### Week 3

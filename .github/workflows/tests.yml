@@ -23,8 +23,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
+        sudo apt-get install make
     - name: Test with pytest
       run: |
         pip install pytest
+        make data
         pytest -v
 

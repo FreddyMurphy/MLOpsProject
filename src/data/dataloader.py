@@ -1,4 +1,5 @@
 import glob
+from typing import Optional
 
 import kornia
 import torch
@@ -41,17 +42,20 @@ class DIV2K(torch.utils.data.Dataset):
         return Compose([
             ToTensor(),
             kornia.geometry.Resize(self.image_size, align_corners=False),
-            kornia.geometry.Rescale(self.scale_factor)])
+            kornia.geometry.Rescale(self.scale_factor)
+        ])
 
     def get_hr_transforms(self):
         """Returns HR image transformations"""
         return Compose([
             ToTensor(),
-            kornia.geometry.Resize(self.image_size, align_corners=False)])
+            kornia.geometry.Resize(self.image_size, align_corners=False)
+        ])
 
 
 class DIV2KDataModule(LightningDataModule):
-    def __init__(self, data_dir: str = '',
+    def __init__(self,
+                 data_dir: str = '',
                  batch_size: int = 8,
                  num_workers: int = 4):
         super().__init__()
@@ -60,9 +64,11 @@ class DIV2KDataModule(LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-    def setup(self, stage):
-        self.div2k_train = DIV2K(self.data_dir + '/data/raw/DIV2K_train_HR')
-        self.div2k_test = DIV2K(self.data_dir + '/data/raw/DIV2K_valid_HR')
+    def setup(self, stage: Optional[str] = None):
+        if self.data_dir != '':
+            self.data_dir = self.data_dir + '/'
+        self.div2k_train = DIV2K(self.data_dir + 'data/raw/DIV2K_train_HR')
+        self.div2k_test = DIV2K(self.data_dir + 'data/raw/DIV2K_valid_HR')
 
         print(len(self.div2k_train))
         print(len(self.div2k_test))

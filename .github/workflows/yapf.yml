@@ -1,0 +1,21 @@
+name: Format python code
+on: push
+jobs:
+  yapf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: autoyapf
+        id: autoyapf
+        uses: mritunjaysharma394/autoyapf@v2
+        with:
+          args: --style pep8 --recursive --in-place .
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: yapf action fixes
+          title: Fixes by yapf action
+          body: This is an auto-generated PR with fixes by yapf.
+          labels: yapf, automated pr
+          reviewers: philipwastakenwastaken
+          branch: yapf-patches

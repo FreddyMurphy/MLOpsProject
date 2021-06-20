@@ -2,10 +2,10 @@ import torch
 import torch_enhance
 from kornia.losses import SSIMLoss
 from pytorch_lightning import LightningModule
+from torch_enhance import metrics
 
 
 class SRCNN(LightningModule):
-
     def __init__(self, scaling=4, n_channels=3, lr=0.001, window_size=5):
         super().__init__()
         self.model = torch_enhance.models.SRCNN(scaling, n_channels)
@@ -26,7 +26,17 @@ class SRCNN(LightningModule):
 
         loss = self.criterion(upscaled, high_res)
 
-        self.log('train_loss', loss)
+        # metrics
+        # Mean absolute error
+        mae = metrics.mae(upscaled, high_res)
+
+        # Peak-signal-noise ratio
+        psnr = metrics.psnr(upscaled, high_res)
+
+        # Logs
+        self.log("train_loss", loss)
+        self.log("train_mae", mae)
+        self.log("train_psnr", psnr)
 
         # TODO: Accuracy
 
@@ -39,7 +49,18 @@ class SRCNN(LightningModule):
 
         loss = self.criterion(upscaled, high_res)
 
-        self.log('val_loss', loss)
+        # metrics
+
+        # Mean absolute error
+        mae = metrics.mae(upscaled, high_res)
+
+        # Peak-signal-noise ratio
+        psnr = metrics.psnr(upscaled, high_res)
+
+        # Logs
+        self.log("train_loss", loss)
+        self.log("train_mae", mae)
+        self.log("train_psnr", psnr)
 
         # TODO: Accuracy
 
@@ -52,7 +73,17 @@ class SRCNN(LightningModule):
 
         loss = self.criterion(upscaled, high_res)
 
-        self.log('test_loss', loss)
+        # metrics
+        # Mean absolute error
+        mae = metrics.mae(upscaled, high_res)
+
+        # Peak-signal-noise ratio
+        psnr = metrics.psnr(upscaled, high_res)
+
+        # Logs
+        self.log("train_loss", loss)
+        self.log("train_mae", mae)
+        self.log("train_psnr", psnr)
 
         # TODO: Accuracy
 
