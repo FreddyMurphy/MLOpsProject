@@ -27,9 +27,10 @@ if (uri == ''):
 # Load image, resize to our system and turn into tensor
 with Image.open('data/raw/DIV2K_valid_HR/0801.png') as img:
     transform = Compose([
-            ToTensor(),
-            kornia.geometry.Resize((256, 256), align_corners=False),
-            kornia.geometry.Rescale(0.25)])
+        ToTensor(),
+        kornia.geometry.Resize((256, 256), align_corners=False),
+        kornia.geometry.Rescale(0.25)
+    ])
     img = transform(img).unsqueeze_(0)
 
 # Turn into numpy

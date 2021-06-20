@@ -15,8 +15,10 @@ def init():
 
     with open(model_path, 'rb') as f:
         obj = f.read()
-        state_dict = {key: arr for key, arr in
-                      pickle.loads(obj, encoding='latin1').items()}
+        state_dict = {
+            key: arr
+            for key, arr in pickle.loads(obj, encoding='latin1').items()
+        }
     model.load_state_dict(state_dict)
 
 

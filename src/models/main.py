@@ -132,7 +132,8 @@ class Session(object):
         # Save the trained model
         model_file = 'div2k_model.pkl'
         os.makedirs('outputs', exist_ok=True)
-        joblib.dump(value=self.model.state_dict(), filename='outputs/' + model_file)
+        joblib.dump(value=self.model.state_dict(),
+                    filename='outputs/' + model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
