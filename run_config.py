@@ -3,7 +3,7 @@ from azureml.core import (Dataset, Environment, Experiment, Model,
                           ScriptRunConfig, Workspace)
 from azureml.core.conda_dependencies import CondaDependencies
 
-# Training arguments if one wants to override hydra config 
+# Training arguments if one wants to override hydra config
 # EPOCHS = 10
 # LEARNING_RATE = 0.0001
 # SEED = 1234
@@ -46,11 +46,11 @@ dataset_input = dataset.as_mount()
 
 # Define arguments for config
 # arguments = [
-#     'train', '-e', EPOCHS, '-lr', LEARNING_RATE, 
+#     'train', '-e', EPOCHS, '-lr', LEARNING_RATE,
 #     '--data_dir', dataset_input
 # ]
 
-arguments = ['training.data_dir='+str(data_ref)]
+arguments = ['training.data_dir=' + str(data_ref)]
 print(arguments)
 
 # If wandb api key is defined, then send value
@@ -71,8 +71,9 @@ config = ScriptRunConfig(compute_target=compute_targets['GPU'],
                          script='src/models/main.py',
                          environment=env,
                          arguments=arguments)
-config.run_config.data_references = {data_ref.data_reference_name: data_ref.to_config()} 
-
+config.run_config.data_references = {
+    data_ref.data_reference_name: data_ref.to_config()
+}
 
 # Create experiment and run config on it
 experiment_name = "Train_SRCNN"
