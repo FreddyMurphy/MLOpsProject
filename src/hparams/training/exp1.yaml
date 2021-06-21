@@ -1,0 +1,7 @@
+epochs: 10
+learning_rate: 0.0001
+load_models_from: None
+data_dir: '.'
+wandb_api_key: None
+command: 'train'
+seed: 1234

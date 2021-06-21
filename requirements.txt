@@ -23,6 +23,7 @@ future==0.18.2
 google-auth==1.31.0
 google-auth-oauthlib==0.4.4
 grpcio==1.38.0
+hydra-core
 idna==2.10
 imagesize==1.2.0
 iniconfig==1.1.1
