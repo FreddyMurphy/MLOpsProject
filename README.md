@@ -77,11 +77,23 @@ Project Checklist
 - [x] ~~Setup and used Azure to train your model~~
 - [x] ~~Played around with distributed data loading~~
 - [x] ~~(not curriculum) Reformated your code in the pytorch lightning format~~
-- [ ] Deployed your model using Azure
+- [x] ~~Deployed your model using Azure~~
 - [ ] ~~Checked how robust your model is towards data drifting~~
 - [ ] Deployed your model locally using TorchServe
 
 ### Week 3
+
+- [ ] Used Optuna to run hyperparameter optimization on your model
+- [ ] Wrote one or multiple configurations files for your experiments
+- [ ] Used Hydra to load the configurations and manage your hyperparameters
+
+### Additional
+
+- [ ] Revisit your initial project description. Did the project turn out as you wanted?
+- [ ] Make sure all group members have a understanding about all parts of the project
+- [ ] Created a powerpoint presentation explaining your project
+- [x] ~~Uploaded all your code to github~~
+
 
 --------
 
