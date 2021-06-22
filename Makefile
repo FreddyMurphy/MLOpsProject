@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data lint requirements
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -6,25 +6,15 @@
 
 export PATH := bin:$(PATH)
 
-
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = MLOpsProject
 OS := $(shell uname)
-
 
 ifeq ($(OS),Darwin)
 PYTHON_INTERPRETER = python3
 else
 PYTHON_INTERPRETER = python
-endif
-
-
-ifeq (,$(shell where conda))
-HAS_CONDA=False
-else
-HAS_CONDA=True
 endif
 
 #################################################################################
@@ -37,6 +27,9 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
 
+test_requirements: requirements
+	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
+
 ## Make Dataset
 data: requirements
 	$(shell mkdir -p data)
@@ -44,8 +37,25 @@ data: requirements
 	$(shell mkdir -p data/processed)
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
+# Train data set using DIV2K
 train:
-	$(PYTHON_INTERPRETER) src/models/main.py train
+	$(PYTHON_INTERPRETER) src/models/main.py
+
+evaluate:
+	$(PYTHON_INTERPRETER) src/models/main.py command=evaluate
+
+# Deploy most recently trained model using Azure
+deploy:
+	$(PYTHON_INTERPRETER) azure/deploy_model.py
+
+# Delete the currently deployed model on Azure
+delete:
+	$(PYTHON_INTERPRETER) azure/delete_services.py
+
+# Run tests
+test: test_requirements
+	$(shell pytest -v)
+
 
 ## Delete all compiled Python files
 clean:
@@ -55,40 +65,6 @@ clean:
 ## Lint using flake8
 lint:
 	flake8 src
-
-## Upload Data to S3
-sync_data_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync data/ s3://$(BUCKET)/data/
-else
-	aws s3 sync data/ s3://$(BUCKET)/data/ --profile $(PROFILE)
-endif
-
-## Download Data from S3
-sync_data_from_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync s3://$(BUCKET)/data/ data/
-else
-	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
-endif
-
-## Set up python interpreter environment
-create_environment:
-ifeq (True,$(HAS_CONDA))
-		@echo ">>> Detected conda, creating conda environment."
-ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
-	conda create --name $(PROJECT_NAME) python=3
-else
-	conda create --name $(PROJECT_NAME) python=2.7
-endif
-		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
-else
-	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
-	@echo ">>> Installing virtualenvwrapper if not already installed.\nMake sure the following lines are in shell startup file\n\
-	export WORKON_HOME=$$HOME/.virtualenvs\nexport PROJECT_HOME=$$HOME/Devel\nsource /usr/local/bin/virtualenvwrapper.sh\n"
-	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-endif
 
 ## Test python environment is setup correctly
 test_environment:

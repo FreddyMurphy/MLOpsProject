@@ -1,12 +1,11 @@
 -e .
 azureml-core
 azureml-dataset-runtime
+azureml-defaults
 hydra-core
 kornia
 matplotlib
 numpy
-python-dotenv
-pytest
 joblib
 torch==1.9.0
 pytorch-lightning

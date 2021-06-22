@@ -15,13 +15,18 @@ from src.data.dataloader import DIV2KDataModule
 from src.models.model import SRCNN
 from src.models.train_model import test, train
 
+import random
+import numpy as np
+
 
 class Session(object):
     def __init__(self, config):
         train_params = config.training
         # model_params = config.model
 
-        torch.manual_seed(train_params["seed"])
+        torch.manual_seed(train_params['seed'])
+        random.seed(train_params['seed'])
+        np.random.seed(train_params['seed'])
 
         train_or_evaluate = getattr(self, train_params['command'])
 
@@ -119,4 +124,4 @@ def session(config):
 
 
 if __name__ == '__main__':
-    Session()
+    session()
