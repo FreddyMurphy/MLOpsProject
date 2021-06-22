@@ -3,4 +3,4 @@ defaults:
   - model: exp1
   - training: exp1
 
-  - hparams_search: config_optuna
+  - hparams_search: null

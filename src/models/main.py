@@ -37,7 +37,7 @@ class Session(object):
         else:
             self.data_dir = train_params['data_dir']
 
-        self.div2k = DIV2KDataModule(data_dir=self.data_dir, 
+        self.div2k = DIV2KDataModule(data_dir=self.data_dir,
                                      batch_size=train_params['batch_size'])
         self.epochs = train_params['epochs']
 
@@ -104,7 +104,6 @@ class Session(object):
         os.makedirs(get_original_cwd() + '/outputs', exist_ok=True)
         joblib.dump(value=self.model.state_dict(),
                     filename=get_original_cwd() + '/outputs/' + model_file)
-
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)

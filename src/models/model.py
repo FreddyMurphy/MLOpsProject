@@ -1,4 +1,4 @@
-import torch
+
 from torch import optim
 import torch_enhance
 from kornia.losses import SSIMLoss
@@ -7,7 +7,11 @@ from torch_enhance import metrics
 
 
 class SRCNN(LightningModule):
-    def __init__(self, scaling=4, n_channels=3, lr=0.001, window_size=5, optimizer = 'Adam'):
+    def __init__(self, scaling=4,
+                 n_channels=3,
+                 lr=0.001,
+                 window_size=5,
+                 optimizer='Adam'):
         super().__init__()
         self.model = torch_enhance.models.SRCNN(scaling, n_channels)
 
@@ -19,7 +23,8 @@ class SRCNN(LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        optimizer = getattr(optim, self.optimizer)(self.parameters(), lr=self.lr)
+        optimizer = getattr(optim, self.optimizer)(self.parameters(),
+                                                   lr=self.lr)
         return optimizer
 
     def training_step(self, train_batch, batch_idx):
