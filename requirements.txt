@@ -1,7 +1,6 @@
 -e .
 azureml-core
 azureml-dataset-runtime
-azureml-defaults
 hydra-core
 kornia
 matplotlib

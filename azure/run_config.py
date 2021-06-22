@@ -20,6 +20,8 @@ with open('./requirements.txt', encoding='utf-8') as f:
     pip_packages = f.readlines()
 pip_packages = [x.strip() for x in pip_packages[1:]]  # Skip first line
 
+pip_packages.append('azureml-defaults')
+
 # Set dependencies of env
 # (could also have used a dependencies.txt file instead)
 packages = CondaDependencies.create(

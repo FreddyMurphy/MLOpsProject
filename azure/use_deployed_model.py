@@ -25,7 +25,7 @@ if (uri == ''):
     exit()
 
 # Load image, resize to our system and turn into tensor
-with Image.open('data/raw/DIV2K_valid_HR/0801.png') as img:
+with Image.open('./data/raw/DIV2K_valid_HR/0801.png') as img:
     transform = Compose([
         ToTensor(),
         kornia.geometry.Resize((256, 256), align_corners=False),

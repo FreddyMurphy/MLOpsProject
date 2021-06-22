@@ -21,38 +21,44 @@ endif
 # COMMANDS                                                                      #
 #################################################################################
 
-## Install Python Dependencies
+## Install Python dependencies
 requirements: test_environment
 	$(shell touch wandb_api_key.txt)
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
 
+## Install Python test dependencies
 test_requirements: requirements
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements_tests.txt
 
-## Make Dataset
+## Download and process the DIV2K dataset
 data: requirements
 	$(shell mkdir -p data)
 	$(shell mkdir -p data/raw)
 	$(shell mkdir -p data/processed)
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
-# Train data set using DIV2K
+## Train data set using DIV2K locally
 train:
 	$(PYTHON_INTERPRETER) src/models/main.py
 
+## Train data set using DIV2K using Azure
+train-azure:
+	$(PYTHON_INTERPRETER) azure/run_config.py
+
+## Evaluate a given model using DIV2K
 evaluate:
 	$(PYTHON_INTERPRETER) src/models/main.py command=evaluate
 
-# Deploy most recently trained model using Azure
+## Deploy most recently trained model using Azure
 deploy:
 	$(PYTHON_INTERPRETER) azure/deploy_model.py
 
-# Delete the currently deployed model on Azure
+## Delete all currently deployed services on Azure
 delete:
 	$(PYTHON_INTERPRETER) azure/delete_services.py
 
-# Run tests
+## Run tests
 test: test_requirements
 	$(shell pytest -v)
 
