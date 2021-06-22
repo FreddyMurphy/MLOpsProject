@@ -1,12 +1,13 @@
 import argparse
-import hydra
-from hydra.utils import get_original_cwd
-from omegaconf import OmegaConf
 import os
 import shutil
 
+import hydra
 import joblib
+import torch
 import wandb
+from hydra.utils import get_original_cwd
+from omegaconf import OmegaConf
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
@@ -16,8 +17,6 @@ from src.data.dataloader import DIV2KDataModule
 from src.models.model import SRCNN
 from src.models.train_model import test, train
 
-import torch
-
 
 class Session(object):
     def __init__(self, config):
@@ -25,17 +24,17 @@ class Session(object):
         model_params = config.model
 
         torch.manual_seed(train_params["seed"])
-                
+
         train_or_evaluate = getattr(self, train_params['command'])
 
         self.model = self.setup_model(train_params['load_models_from'],
                                       train_params['learning_rate'])
-        
+
         if (train_params['data_dir'] == '.'):
             self.data_dir = get_original_cwd()
         else:
             self.data_dir = train_params['data_dir']
-        
+
         self.div2k = DIV2KDataModule(data_dir=self.data_dir)
         self.epochs = train_params['epochs']
         self.learning_rate = train_params['learning_rate']
@@ -58,8 +57,7 @@ class Session(object):
             self.use_wandb = True
 
         if not self.use_wandb:
-            print("wandb API key not found..."
-                  "Cannot use WandB...")
+            print("wandb API key not found..." "Cannot use WandB...")
 
         self.logger = None
 
@@ -80,9 +78,9 @@ class Session(object):
             filename='div2k-{epoch:02d}-{val_loss:.3f}',
             save_top_k=1,
             mode='min')
-                
+
         gpus = -1 if torch.cuda.is_available() else 0
-        
+
         trainer = Trainer(max_epochs=self.epochs,
                           logger=self.logger,
                           gpus=gpus,
