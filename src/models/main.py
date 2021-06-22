@@ -26,7 +26,7 @@ class Session(object):
         train_params = config.training
         model_params = config.model
         print(train_params)
-        
+
         torch.manual_seed(train_params["seed"])
         random.seed(train_params['seed'])
         np.random.seed(train_params['seed'])
