@@ -1,0 +1,36 @@
+# @package _global_
+defaults:
+  - override /hydra/sweeper: optuna
+  - override /hydra/sweeper/sampler: tpe
+# choose metric which will be optimized by Optuna
+optimized_metric: "val_loss"
+
+hydra:
+  sweeper:
+    storage: null
+    study_name: test
+    n_jobs: 1
+
+    # 'minimize' or 'maximize' the objective
+    direction: minimize
+
+    # number of experiments that will be executed
+    n_trials: 20
+
+    sampler: 
+      seed: 12345
+
+    search_space:
+      model.learning_rate: 
+        type: float
+        low: 1e-4
+        high: 1e-2
+        step: 1e-3
+      training.batch_size:
+        type: int
+        low: 2
+        high: 16
+        step: 2
+      model.optim:
+        type: categorical
+        choices: ['Adam', 'RMSprop', 'SGD']

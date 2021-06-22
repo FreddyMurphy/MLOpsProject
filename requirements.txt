@@ -14,3 +14,4 @@ torch-enhance
 torchmetrics
 torchvision
 wandb
+hydra-optuna-sweeper
