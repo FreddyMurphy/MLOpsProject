@@ -1,8 +1,10 @@
 import os
+import random
 import shutil
 
 import hydra
 import joblib
+import numpy as np
 import torch
 from torch.functional import Tensor
 import wandb
@@ -24,7 +26,10 @@ class Session(object):
         train_params = config.training
         model_params = config.model
         print(train_params)
+        
         torch.manual_seed(train_params["seed"])
+        random.seed(train_params['seed'])
+        np.random.seed(train_params['seed'])
 
         train_or_evaluate = getattr(self, train_params['command'])
 
