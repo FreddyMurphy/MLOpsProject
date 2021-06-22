@@ -63,7 +63,7 @@ class Session(object):
 
         self.logger = None
 
-        if (self.use_wandb):
+        if (self.use_wandb and not train_params['command'] == 'evaluate'):
             print("KEY:", key)
             wandb.login(key=key)
             wandb.init(entity='MLOps14', project="DIV2K")
@@ -113,6 +113,7 @@ class Session(object):
         model = SRCNN(lr=learning_rate)
         # Load model from checkpoint in case it was specificed
         if path != 'None':
+            path = os.path.join(get_original_cwd(), path)
             model = SRCNN.load_from_checkpoint(path)
         return model
 
