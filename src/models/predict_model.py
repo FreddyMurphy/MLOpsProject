@@ -1,8 +1,9 @@
-from hydra.utils import get_original_cwd
+import os
+
 import matplotlib
 import matplotlib.pyplot as plt
-import os
 import torch
+from hydra.utils import get_original_cwd
 from torch.utils.data import DataLoader
 
 from src.data.dataloader import DIV2K
@@ -12,8 +13,7 @@ matplotlib.use('Agg')
 
 
 def save_model_output_figs(model):
-    data_path = os.path.join(get_original_cwd(),
-                             'data/raw/DIV2K_valid_HR')
+    data_path = os.path.join(get_original_cwd(), 'data/raw/DIV2K_valid_HR')
     data = DIV2K(data_path)
     dataloader = DataLoader(data, batch_size=1, num_workers=4)
 
@@ -43,8 +43,9 @@ def save_model_output_figs(model):
 
     fig.suptitle("Image comparison")
     plt.tight_layout()
-    plt.savefig(os.path.join(get_original_cwd(),
-                "reports/figures/image_comparison.png"))
+    plt.savefig(
+        os.path.join(get_original_cwd(),
+                     "reports/figures/image_comparison.png"))
 
 
 if __name__ == '__main__':
