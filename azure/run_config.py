@@ -1,7 +1,11 @@
 import azureml.core
+import joblib
+import torch
 from azureml.core import (Dataset, Environment, Experiment, Model,
                           ScriptRunConfig, Workspace)
 from azureml.core.conda_dependencies import CondaDependencies
+
+from src.models.model import SRCNN
 
 # Training arguments if one wants to override hydra config
 # EPOCHS = 10
@@ -46,12 +50,6 @@ dataset = Dataset.File.from_files(path=path)
 data_ref = datastore.path('datasets').as_mount()
 dataset_input = dataset.as_mount()
 
-# Define arguments for config
-# arguments = [
-#     'train', '-e', EPOCHS, '-lr', LEARNING_RATE,
-#     '--data_dir', dataset_input
-# ]
-
 arguments = ['training.data_dir=' + str(data_ref)]
 print(arguments)
 
@@ -87,9 +85,29 @@ run.wait_for_completion(show_output=True)
 run.complete()
 
 # Register the model
+run.download_file('outputs/div2k_model.ckpt', './outputs/div2k_model.ckpt')
+checkpoint = torch.load('./outputs/div2k_model.ckpt')
+
+val_loss = None
+for key in checkpoint['callbacks'].keys():
+    try:
+        val_loss = checkpoint['callbacks'][key]['best_model_score'].item()
+    except Exception:
+        pass
+
+model = SRCNN.load_from_checkpoint('./outputs/div2k_model.ckpt')
+# Save the state dict of the best trained model
+model_file = 'div2k_model.pkl'
+joblib.dump(value=model.state_dict(), filename='./outputs/' + model_file)
+run.upload_file('outputs/div2k_model.pkl', './outputs/div2k_model.pkl')
+
 run.register_model(model_path='./outputs/div2k_model.pkl',
                    model_name='div2k_model',
-                   tags={'Training context': 'Inline Training'})
+                   properties={
+                       'lr': model.lr,
+                       'optim': model.optimizer,
+                       'val_loss': val_loss
+                   })
 
 for model in Model.list(ws):
     print(model.name, 'version:', model.version)

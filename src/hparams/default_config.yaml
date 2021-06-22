@@ -2,5 +2,5 @@
 defaults:
   - model: exp1
   - training: exp1
-
-  - hparams_search: null
+  - session: train
+  - hparams_search: optuna

@@ -1,13 +1,13 @@
-
-from torch import optim
 import torch_enhance
 from kornia.losses import SSIMLoss
 from pytorch_lightning import LightningModule
+from torch import optim
 from torch_enhance import metrics
 
 
 class SRCNN(LightningModule):
-    def __init__(self, scaling=4,
+    def __init__(self,
+                 scaling=4,
                  n_channels=3,
                  lr=0.001,
                  window_size=5,
@@ -44,7 +44,6 @@ class SRCNN(LightningModule):
         self.log("train_loss", loss)
         self.log("train_mae", mae)
         self.log("train_psnr", psnr)
-        self.log("learning_rate", self.lr)
 
         # TODO: Accuracy
 
@@ -69,7 +68,6 @@ class SRCNN(LightningModule):
         self.log("val_loss", loss)
         self.log("val_mae", mae)
         self.log("val_psnr", psnr)
-        self.log("learning_rate", self.lr)
 
         # TODO: Accuracy
 
@@ -93,7 +91,6 @@ class SRCNN(LightningModule):
         self.log("test_loss", loss)
         self.log("test_mae", mae)
         self.log("test_psnr", psnr)
-        self.log("learning_rate", self.lr)
 
         # TODO: Accuracy
 

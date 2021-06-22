@@ -25,6 +25,7 @@ dependencies:
   - torchmetrics
   - torchvision
   - wandb
+  - hydra-optuna-sweeper
   - azureml-defaults~=1.31.0
   - git+https://github.com/FreddyMurphy/MLOpsProject@master#egg=src
 - pip
