@@ -6,13 +6,13 @@ import hydra
 import joblib
 import numpy as np
 import torch
-from torch.functional import Tensor
 import wandb
 from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
+from torch.functional import Tensor
 
 import src.models.predict_model as predictor
 from src.data.dataloader import DIV2KDataModule
