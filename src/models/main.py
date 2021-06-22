@@ -1,9 +1,11 @@
-import argparse
 import os
 import shutil
 
+import hydra
 import joblib
+import torch
 import wandb
+from hydra.utils import get_original_cwd
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
@@ -15,82 +17,41 @@ from src.models.train_model import test, train
 
 
 class Session(object):
-    def __init__(self):
-        # Setup parsing of arguments
-        parser = argparse.ArgumentParser(
-            description="Script for either training or evaluating",
-            usage="python main.py <command>")
-        parser.add_argument("command",
-                            metavar='<command>',
-                            help="Subcommand to run; train or evaluate")
+    def __init__(self, config):
+        train_params = config.training
+        # model_params = config.model
 
-        parser.add_argument('--epochs',
-                            '-e',
-                            type=int,
-                            metavar='<integer>',
-                            help='Number of epochs to train',
-                            default=10)
+        torch.manual_seed(train_params["seed"])
 
-        parser.add_argument('--learning_rate',
-                            '-lr',
-                            type=float,
-                            metavar='<float>',
-                            help='Learning rate during training',
-                            default=0.0001)
+        train_or_evaluate = getattr(self, train_params['command'])
 
-        parser.add_argument('--load_models_from',
-                            '-l',
-                            type=str,
-                            metavar='<string>',
-                            help='Model file path',
-                            default=None)
+        self.model = self.setup_model(train_params['load_models_from'],
+                                      train_params['learning_rate'])
 
-        parser.add_argument('--data_dir',
-                            '-d',
-                            type=str,
-                            metavar='<string>',
-                            help='Data file path',
-                            default='.')
+        if (train_params['data_dir'] == '.'):
+            self.data_dir = get_original_cwd()
+        else:
+            self.data_dir = train_params['data_dir']
 
-        parser.add_argument('--wandb_api_key',
-                            '-wd',
-                            type=str,
-                            metavar='<string>',
-                            help='API key from wandb',
-                            default=None)
-
-        args = parser.parse_args()
-
-        # Exit gracefully if wrong command is provided
-        if not hasattr(self, args.command):
-            print('Unkown command:', args.command)
-            parser.print_help()
-            exit(1)
-
-        train_or_evaluate = getattr(self, args.command)
-
-        self.model = self.setup_model(args.load_models_from,
-                                      args.learning_rate)
-
-        self.data_dir = args.data_dir
         self.div2k = DIV2KDataModule(data_dir=self.data_dir)
-        self.epochs = args.epochs
-        self.learning_rate = args.learning_rate
+        self.epochs = train_params['epochs']
+        self.learning_rate = train_params['learning_rate']
 
         # Try to find the wandb API key. The key can either be
         # passed as an argument (for use in Azure), or given in
         # the wandb_api_key.txt file.
         self.use_wandb = True
         try:
-            with open("wandb_api_key.txt", encoding='utf-8') as f:
+            with open(get_original_cwd() + "/wandb_api_key.txt",
+                      encoding='utf-8') as f:
                 key = f.read()
                 if key == '':
                     raise Exception()
         except Exception:
             self.use_wandb = False
 
-        if args.wandb_api_key:
-            key = args.wandb_api_key
+        if train_params['wandb_api_key'] != 'None':
+            key = train_params['wandb_api_key']
             self.use_wandb = True
 
         if not self.use_wandb:
@@ -99,6 +60,7 @@ class Session(object):
         self.logger = None
 
         if (self.use_wandb):
+            print("KEY:", key)
             wandb.login(key=key)
             wandb.init(entity='MLOps14', project="DIV2K")
             self.logger = WandbLogger()
@@ -115,9 +77,11 @@ class Session(object):
             save_top_k=1,
             mode='min')
 
+        gpus = -1 if torch.cuda.is_available() else 0
+
         trainer = Trainer(max_epochs=self.epochs,
                           logger=self.logger,
-                          gpus=1,
+                          gpus=gpus,
                           callbacks=[checkpoint_callback])
 
         train(trainer, self.div2k, self.model)
@@ -131,9 +95,9 @@ class Session(object):
 
         # Save the trained model
         model_file = 'div2k_model.pkl'
-        os.makedirs('outputs', exist_ok=True)
+        os.makedirs(get_original_cwd() + '/outputs', exist_ok=True)
         joblib.dump(value=self.model.state_dict(),
-                    filename='outputs/' + model_file)
+                    filename=get_original_cwd() + '/outputs/' + model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
@@ -143,13 +107,16 @@ class Session(object):
 
     def setup_model(self, path, learning_rate):
         model = SRCNN(lr=learning_rate)
-
         # Load model from checkpoint in case it was specificed
-        if path:
+        if path != 'None':
             model = SRCNN.load_from_checkpoint(path)
-
         return model
 
 
+@hydra.main(config_path="../hparams", config_name="default_config")
+def session(config):
+    Session(config)
+
+
 if __name__ == '__main__':
-    session = Session()
+    Session()

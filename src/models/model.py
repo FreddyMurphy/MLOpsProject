@@ -18,7 +18,8 @@ class SRCNN(LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
+        return optimizer
 
     def training_step(self, train_batch, batch_idx):
         high_res, low_res = train_batch
@@ -37,6 +38,7 @@ class SRCNN(LightningModule):
         self.log("train_loss", loss)
         self.log("train_mae", mae)
         self.log("train_psnr", psnr)
+        self.log("learning_rate", self.lr)
 
         # TODO: Accuracy
 
@@ -58,9 +60,10 @@ class SRCNN(LightningModule):
         psnr = metrics.psnr(upscaled, high_res)
 
         # Logs
-        self.log("train_loss", loss)
-        self.log("train_mae", mae)
-        self.log("train_psnr", psnr)
+        self.log("val_loss", loss)
+        self.log("val_mae", mae)
+        self.log("val_psnr", psnr)
+        self.log("learning_rate", self.lr)
 
         # TODO: Accuracy
 
@@ -81,9 +84,10 @@ class SRCNN(LightningModule):
         psnr = metrics.psnr(upscaled, high_res)
 
         # Logs
-        self.log("train_loss", loss)
-        self.log("train_mae", mae)
-        self.log("train_psnr", psnr)
+        self.log("test_loss", loss)
+        self.log("test_mae", mae)
+        self.log("test_psnr", psnr)
+        self.log("learning_rate", self.lr)
 
         # TODO: Accuracy
 
