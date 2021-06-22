@@ -28,7 +28,7 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
 
 test_requirements: requirements
-	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip install -U -r requirements_tests.txt
 
 ## Make Dataset
 data: requirements
