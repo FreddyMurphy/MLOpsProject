@@ -93,5 +93,6 @@ target/
 wandb_api_key.txt
 config.json
 
-# hydro logs
+# hydra logs
 outputs/
+multirun/
