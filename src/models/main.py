@@ -1,12 +1,13 @@
 import argparse
-import hydra
-from hydra.utils import get_original_cwd
-from omegaconf import OmegaConf
 import os
 import shutil
 
+import hydra
 import joblib
+import torch
 import wandb
+from hydra.utils import get_original_cwd
+from omegaconf import OmegaConf
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
@@ -15,8 +16,6 @@ import src.models.predict_model as predictor
 from src.data.dataloader import DIV2KDataModule
 from src.models.model import SRCNN
 from src.models.train_model import test, train
-
-import torch
 
 
 class Session(object):
