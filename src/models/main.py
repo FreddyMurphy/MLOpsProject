@@ -1,4 +1,3 @@
-import argparse
 import os
 import shutil
 
@@ -21,7 +20,7 @@ from src.models.train_model import test, train
 class Session(object):
     def __init__(self, config):
         train_params = config.training
-        model_params = config.model
+        config.model
 
         torch.manual_seed(train_params["seed"])
 
@@ -117,7 +116,7 @@ class Session(object):
 
 @hydra.main(config_path="../hparams", config_name="default_config")
 def session(config):
-    session = Session(config)
+    Session(config)
 
 
 if __name__ == '__main__':
