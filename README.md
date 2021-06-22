@@ -79,13 +79,13 @@ Project Checklist
 - [x] ~~(not curriculum) Reformated your code in the pytorch lightning format~~
 - [x] ~~Deployed your model using Azure~~
 - [ ] ~~Checked how robust your model is towards data drifting~~
-- [ ] Deployed your model locally using TorchServe
+- [ ] ~~Deployed your model locally using TorchServe~~
 
 ### Week 3
 
-- [ ] Used Optuna to run hyperparameter optimization on your model
-- [ ] Wrote one or multiple configurations files for your experiments
-- [ ] Used Hydra to load the configurations and manage your hyperparameters
+- [x] ~~Used Optuna to run hyperparameter optimization on your model~~
+- [x] ~~Wrote one or multiple configurations files for your experiments~~
+- [x] ~~Used Hydra to load the configurations and manage your hyperparameters~~
 
 ### Additional
 
