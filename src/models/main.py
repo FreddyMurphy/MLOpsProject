@@ -8,9 +8,11 @@ import numpy as np
 import torch
 import wandb
 from hydra.utils import get_original_cwd
+from omegaconf import DictConfig
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
+from torch.functional import Tensor
 
 import src.models.predict_model as predictor
 from src.data.dataloader import DIV2KDataModule
@@ -20,26 +22,30 @@ from src.models.train_model import test, train
 
 class Session(object):
     def __init__(self, config):
+        self.final_loss = 0
+        session_params = config.session
         train_params = config.training
-        # model_params = config.model
+        model_params = config.model
+        print(train_params)
 
-        torch.manual_seed(train_params['seed'])
-        random.seed(train_params['seed'])
-        np.random.seed(train_params['seed'])
+        torch.manual_seed(session_params["seed"])
+        random.seed(session_params['seed'])
+        np.random.seed(session_params['seed'])
 
-        train_or_evaluate = getattr(self, train_params['command'])
+        train_or_evaluate = getattr(self, session_params['command'])
 
-        self.model = self.setup_model(train_params['load_models_from'],
-                                      train_params['learning_rate'])
+        self.model = self.setup_model(session_params['load_models_from'],
+                                      model_params['learning_rate'],
+                                      model_params['optim'])
 
         if (train_params['data_dir'] == '.'):
             self.data_dir = get_original_cwd()
         else:
             self.data_dir = train_params['data_dir']
 
-        self.div2k = DIV2KDataModule(data_dir=self.data_dir)
+        self.div2k = DIV2KDataModule(data_dir=self.data_dir,
+                                     batch_size=train_params['batch_size'])
         self.epochs = train_params['epochs']
-        self.learning_rate = train_params['learning_rate']
 
         # Try to find the wandb API key. The key can either be
         # passed as an argument (for use in Azure), or given in
@@ -63,7 +69,7 @@ class Session(object):
 
         self.logger = None
 
-        if (self.use_wandb and not train_params['command'] == 'evaluate'):
+        if (self.use_wandb and not session_params['command'] == 'evaluate'):
             print("KEY:", key)
             wandb.login(key=key)
             wandb.init(entity='MLOps14', project="DIV2K")
@@ -90,6 +96,8 @@ class Session(object):
 
         train(trainer, self.div2k, self.model)
 
+        self.final_loss = trainer.logged_metrics['val_loss']
+
         if (self.use_wandb):
             wandb.finish()
 
@@ -109,8 +117,8 @@ class Session(object):
         test(trainer, self.div2k, self.model)
         predictor.save_model_output_figs(self.model)
 
-    def setup_model(self, path, learning_rate):
-        model = SRCNN(lr=learning_rate)
+    def setup_model(self, path, learning_rate, optimizer):
+        model = SRCNN(lr=learning_rate, optimizer=optimizer)
         # Load model from checkpoint in case it was specificed
         if path != 'None':
             path = os.path.join(get_original_cwd(), path)
@@ -119,9 +127,10 @@ class Session(object):
 
 
 @hydra.main(config_path="../hparams", config_name="default_config")
-def session(config):
-    Session(config)
+def objective(config: DictConfig) -> Tensor:
+    sess = Session(config)
+    return sess.final_loss
 
 
 if __name__ == '__main__':
-    session()
+    objective()

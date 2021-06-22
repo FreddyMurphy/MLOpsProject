@@ -40,7 +40,11 @@ data: requirements
 
 ## Train data set using DIV2K locally
 train:
-	$(PYTHON_INTERPRETER) src/models/main.py
+	$(PYTHON_INTERPRETER) src/models/main.py session=train
+
+## Optimize hyperparameters using Optuna
+train-optuna:
+	$(PYTHON_INTERPRETER) src/models/main.py session=train --multirun
 
 ## Train data set using DIV2K using Azure
 train-azure:
@@ -48,7 +52,7 @@ train-azure:
 
 ## Evaluate a given model using DIV2K
 evaluate:
-	$(PYTHON_INTERPRETER) src/models/main.py command=evaluate
+	$(PYTHON_INTERPRETER) src/models/main.py session=evaluate
 
 ## Deploy most recently trained model using Azure
 deploy:
