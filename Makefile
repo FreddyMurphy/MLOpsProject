@@ -28,7 +28,7 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements.txt
 
 ## Install Python test dependencies
-test_requirements: requirements
+test_requirements:
 	$(PYTHON_INTERPRETER) -m pip install -U -r requirements_tests.txt
 
 ## Download and process the DIV2K dataset
@@ -60,8 +60,7 @@ delete:
 
 ## Run tests
 test: test_requirements
-	$(shell pytest -v)
-
+	pytest -v
 
 ## Delete all compiled Python files
 clean:
