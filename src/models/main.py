@@ -1,8 +1,10 @@
 import os
+import random
 import shutil
 
 import hydra
 import joblib
+import numpy as np
 import torch
 import wandb
 from hydra.utils import get_original_cwd
@@ -14,9 +16,6 @@ import src.models.predict_model as predictor
 from src.data.dataloader import DIV2KDataModule
 from src.models.model import SRCNN
 from src.models.train_model import test, train
-
-import random
-import numpy as np
 
 
 class Session(object):
