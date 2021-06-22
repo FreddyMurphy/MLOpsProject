@@ -5,6 +5,7 @@ hydra-core
 kornia
 matplotlib
 numpy
+dotenv
 pytest
 joblib
 torch==1.9.0

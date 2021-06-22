@@ -1,4 +1,3 @@
-import argparse
 import os
 import shutil
 
@@ -7,9 +6,8 @@ import joblib
 import torch
 import wandb
 from hydra.utils import get_original_cwd
-from omegaconf import OmegaConf
 from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
+from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 
 import src.models.predict_model as predictor
@@ -21,7 +19,7 @@ from src.models.train_model import test, train
 class Session(object):
     def __init__(self, config):
         train_params = config.training
-        model_params = config.model
+        # model_params = config.model
 
         torch.manual_seed(train_params["seed"])
 
@@ -117,8 +115,8 @@ class Session(object):
 
 @hydra.main(config_path="../hparams", config_name="default_config")
 def session(config):
-    session = Session(config)
+    Session(config)
 
 
 if __name__ == '__main__':
-    session()
+    Session()
