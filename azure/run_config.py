@@ -97,14 +97,16 @@ for key in checkpoint['callbacks'].keys():
 model = SRCNN.load_from_checkpoint('./outputs/div2k_model.ckpt')
 # Save the state dict of the best trained model
 model_file = 'div2k_model.pkl'
-joblib.dump(value=model.state_dict(),
-            filename='./outputs/' + model_file)
+joblib.dump(value=model.state_dict(), filename='./outputs/' + model_file)
 run.upload_file('outputs/div2k_model.pkl', './outputs/div2k_model.pkl')
 
 run.register_model(model_path='./outputs/div2k_model.pkl',
                    model_name='div2k_model',
-                   properties={'lr': model.lr, 'optim': model.optimizer,
-                               'val_loss': val_loss})
+                   properties={
+                       'lr': model.lr,
+                       'optim': model.optimizer,
+                       'val_loss': val_loss
+                   })
 
 for model in Model.list(ws):
     print(model.name, 'version:', model.version)
