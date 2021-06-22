@@ -38,7 +38,7 @@ data: requirements
 	$(shell mkdir -p data/processed)
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
-## Train data set using DIV2K locally
+## Train model using DIV2K locally
 train:
 	$(PYTHON_INTERPRETER) src/models/main.py session=train
 
@@ -46,7 +46,7 @@ train:
 train-optuna:
 	$(PYTHON_INTERPRETER) src/models/main.py session=train --multirun
 
-## Train data set using DIV2K using Azure
+## Train model using DIV2K using Azure
 train-azure:
 	$(PYTHON_INTERPRETER) azure/run_config.py
 
