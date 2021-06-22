@@ -3,14 +3,13 @@ import random
 import shutil
 
 import hydra
-import joblib
 import numpy as np
 import torch
 import wandb
 from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 from torch.functional import Tensor
 
@@ -74,29 +73,53 @@ class Session(object):
             wandb.login(key=key)
             wandb.init(entity='MLOps14', project="DIV2K")
             self.logger = WandbLogger()
+            wandb.log(
+                {
+                    'learning_rate': model_params['learning_rate'],
+                    'seed': session_params['seed'],
+                    'batch_size': train_params['batch_size']
+                },
+                step=0)
+
+            run_name = model_params['optim']
+            run_name += '-' + wandb.run.name.split('-')[-1]
+            run_name += '-' + 'lr=' + str(model_params['learning_rate'])
+            wandb.run.name = run_name
+            wandb.run.save()
 
         # Init finished, start either train or validate!
         train_or_evaluate()
 
     def train(self):
+        model_path = os.path.join(get_original_cwd(), 'models/')
         # We only need a custom checkpoint to save to correct directory
         checkpoint_callback = ModelCheckpoint(
             monitor='val_loss',
-            dirpath='models/',
+            dirpath=model_path,
             filename='div2k-{epoch:02d}-{val_loss:.3f}',
             save_top_k=1,
             mode='min')
+
+        early_stop_callback = EarlyStopping(monitor='val_loss',
+                                            min_delta=0.01,
+                                            patience=3,
+                                            verbose=False,
+                                            mode='min')
 
         gpus = -1 if torch.cuda.is_available() else 0
 
         trainer = Trainer(max_epochs=self.epochs,
                           logger=self.logger,
                           gpus=gpus,
-                          callbacks=[checkpoint_callback])
+                          callbacks=[checkpoint_callback, early_stop_callback])
 
         train(trainer, self.div2k, self.model)
 
+        # Needed for Optuna tuning
         self.final_loss = trainer.logged_metrics['val_loss']
+
+        best_model_path = os.path.join(get_original_cwd(),
+                                       checkpoint_callback.best_model_path)
 
         if (self.use_wandb):
             wandb.finish()
@@ -105,11 +128,12 @@ class Session(object):
             # print(os.path.abspath(os.getcwd()))
             shutil.rmtree('wandb')
 
-        # Save the trained model
-        model_file = 'div2k_model.pkl'
+        # Save the best trained model to a separate directory
+        # to potentially deploy using Azure later.
+        model_file = os.path.join(get_original_cwd(), 'outputs',
+                                  'div2k_model.ckpt')
         os.makedirs(get_original_cwd() + '/outputs', exist_ok=True)
-        joblib.dump(value=self.model.state_dict(),
-                    filename=get_original_cwd() + '/outputs/' + model_file)
+        shutil.copyfile(best_model_path, model_file)
 
     def evaluate(self):
         trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
