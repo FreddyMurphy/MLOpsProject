@@ -1,10 +1,11 @@
 import azureml.core
+import joblib
+import torch
 from azureml.core import (Dataset, Environment, Experiment, Model,
                           ScriptRunConfig, Workspace)
 from azureml.core.conda_dependencies import CondaDependencies
+
 from src.models.model import SRCNN
-import joblib
-import torch
 
 # Training arguments if one wants to override hydra config
 # EPOCHS = 10
