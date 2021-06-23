@@ -1,10 +1,10 @@
 import json
 
+import kornia
 import matplotlib.pyplot as plt
 import numpy as np
 import requests
 import torch
-import kornia
 from azureml.core import Webservice, Workspace
 from PIL import Image
 from torchvision.transforms import Compose, ToTensor

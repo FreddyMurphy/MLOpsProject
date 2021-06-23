@@ -1,7 +1,11 @@
 MLOpsProject
 ==============================
 
-A project for the MLOps course
+A project for the Machine Learning Operations course based around a Super Resolution model.
+
+How To Run
+------------
+Use ``make help`` to see how to run important features with descriptions.
 
 Project Organization
 ------------
@@ -37,25 +41,16 @@ Project Organization
     │   ├── __init__.py         <- Makes src a Python module
     │   │
     │   ├── data                <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features            <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
+    │   ├── hparams             <- .yaml files for hyperparameter configuration using Hydra.
     │   ├── models              <- Scripts to train models and then use trained models to make
-    │   │   │                      predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization       <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │                              predictions
     │── tests                   <- Test scripts using pytest.
 
 --------
 
 Project Checklist
 ------------
-
+The following checklist gives a good sense of what is included in the project:
 ### Week 1
 
 - [x] ~~Create a git repository~~
@@ -88,9 +83,9 @@ Project Checklist
 
 ### Additional
 
-- [ ] Revisit your initial project description. Did the project turn out as you wanted?
-- [ ] Make sure all group members have a understanding about all parts of the project
-- [ ] Created a powerpoint presentation explaining your project
+- [x] ~~Revisit your initial project description. Did the project turn out as you wanted?~~
+- [x] ~~Make sure all group members have a understanding about all parts of the project~~
+- [x] ~~Created a powerpoint presentation explaining your project~~
 - [x] ~~Uploaded all your code to github~~
 
 --------
