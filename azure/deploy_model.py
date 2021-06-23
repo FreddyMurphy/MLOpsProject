@@ -14,7 +14,7 @@ for model in Model.list(ws):
     if (model.name == 'div2k_model'):
         try:
             loss = float(model.properties['val_loss'])
-        except:
+        except Exception:
             continue
         if (loss < min_loss):
             min_loss = loss
