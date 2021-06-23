@@ -14,7 +14,7 @@ class DIV2K(torch.utils.data.Dataset):
                  img_dir,
                  lr_trans=None,
                  hr_trans=None,
-                 scale_factor=0.25,
+                 scale_factor=0.5,
                  image_size=(256, 256)):
 
         self.img_dir = img_dir
@@ -60,7 +60,6 @@ class DIV2KDataModule(LightningDataModule):
                  num_workers: int = 4):
         super().__init__()
         self.data_dir = data_dir
-        print("INSIDE DATA DIR:", self.data_dir + '/data/raw/DIV2K_train_HR')
         self.batch_size = batch_size
         self.num_workers = num_workers
 
@@ -68,13 +67,13 @@ class DIV2KDataModule(LightningDataModule):
         if self.data_dir != '':
             self.data_dir = self.data_dir + '/'
         self.div2k_train = DIV2K(self.data_dir + 'data/raw/DIV2K_train_HR')
-        self.div2k_test = DIV2K(self.data_dir + 'data/raw/DIV2K_valid_HR')
+        self.div2k_val = DIV2K(self.data_dir + 'data/raw/DIV2K_valid_HR')
 
-        print(len(self.div2k_train))
-        print(len(self.div2k_test))
+        self.div2k_val, self.div2k_test = random_split(self.div2k_val, [95, 5])
 
-        self.div2k_train, self.div2k_val = random_split(
-            self.div2k_train, [700, 100])
+        print("Train size:", len(self.div2k_train))
+        print("Val size:", len(self.div2k_val))
+        print("Test size:", len(self.div2k_test))
 
     def train_dataloader(self):
         return DataLoader(self.div2k_train,

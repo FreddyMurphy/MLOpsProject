@@ -25,25 +25,25 @@ class Session(object):
         session_params = config.session
         train_params = config.training
         model_params = config.model
+        eval_params = config.evaluate
         print(train_params)
 
         torch.manual_seed(session_params["seed"])
         random.seed(session_params['seed'])
         np.random.seed(session_params['seed'])
 
-        train_or_evaluate = getattr(self, session_params['command'])
-
         self.model = self.setup_model(session_params['load_models_from'],
                                       model_params['learning_rate'],
                                       model_params['optim'])
+
+        self.eval_data_dir = os.path.join(get_original_cwd(),
+                                          eval_params['data_dir'])
 
         if (train_params['data_dir'] == '.'):
             self.data_dir = get_original_cwd()
         else:
             self.data_dir = train_params['data_dir']
 
-        self.div2k = DIV2KDataModule(data_dir=self.data_dir,
-                                     batch_size=train_params['batch_size'])
         self.epochs = train_params['epochs']
 
         # Try to find the wandb API key. The key can either be
@@ -88,7 +88,15 @@ class Session(object):
             wandb.run.save()
 
         # Init finished, start either train or validate!
-        train_or_evaluate()
+        self.div2k = DIV2KDataModule(data_dir=self.data_dir,
+                                     batch_size=train_params['batch_size'])
+
+        if session_params['command'] == 'train':
+            self.train()
+        elif session_params['command'] == 'evaluate':
+            self.evaluate()
+        else:
+            raise Exception('Unknown command')
 
     def train(self):
         model_path = os.path.join(get_original_cwd(), 'models/')
@@ -101,8 +109,8 @@ class Session(object):
             mode='min')
 
         early_stop_callback = EarlyStopping(monitor='val_loss',
-                                            min_delta=0.01,
-                                            patience=3,
+                                            min_delta=0.0001,
+                                            patience=50,
                                             verbose=False,
                                             mode='min')
 
@@ -136,10 +144,13 @@ class Session(object):
         shutil.copyfile(best_model_path, model_file)
 
     def evaluate(self):
-        trainer = Trainer(max_epochs=self.epochs, logger=self.logger, gpus=-1)
-
+        gpus = -1 if torch.cuda.is_available() else 0
+        trainer = Trainer(max_epochs=self.epochs,
+                          logger=self.logger,
+                          gpus=gpus)
         test(trainer, self.div2k, self.model)
-        predictor.save_model_output_figs(self.model)
+        predictor.save_model_output_figs(self.model, self.div2k)
+        # predictor.infer_files(self.model, self.eval_data_dir)
 
     def setup_model(self, path, learning_rate, optimizer):
         model = SRCNN(lr=learning_rate, optimizer=optimizer)

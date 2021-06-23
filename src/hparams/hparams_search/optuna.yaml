@@ -15,7 +15,7 @@ hydra:
     direction: minimize
 
     # number of experiments that will be executed
-    n_trials: 2
+    n_trials: 20
 
     sampler:
       seed: 12345
@@ -23,7 +23,7 @@ hydra:
     search_space:
       model.learning_rate:
         type: float
-        low: 1e-4
+        low: 1e-5
         high: 1e-2
         step: 1e-3
       training.batch_size:
@@ -33,4 +33,4 @@ hydra:
         step: 2
       model.optim:
         type: categorical
-        choices: ['Adam', 'RMSprop', 'SGD']
+        choices: ['Adam', 'SGD']

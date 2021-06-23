@@ -54,8 +54,7 @@ if __name__ == '__main__':
     dataset_input = dataset.as_mount()
 
     arguments = ['training.data_dir=' + str(data_ref)]
-    arguments += sys.argv[1:]
-    print(arguments)
+
     # If wandb api key is defined, then send value
     # as argument to enable usage of wandb logger
     try:
@@ -68,6 +67,8 @@ if __name__ == '__main__':
     except Exception:
         print("No wandb api key found")
 
+    arguments += sys.argv[1:]
+    print("Starting run with following arguments:", arguments)
     # Run script using the GPU target and env
     config = ScriptRunConfig(compute_target=compute_targets['GPU'],
                              source_directory='.',

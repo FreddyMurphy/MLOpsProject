@@ -64,7 +64,7 @@ Project Checklist
 - [x] ~~File structure made using cookiecutter~~
 - [x] ~~make_dataset.py filled to download needed data~~
 - [x] ~~Add a model file and a training script and get that running~~
-- [ ] Done profiling and optimized code
+- [x] ~~Done profiling and optimized code~~
 - [x] ~~requirements.txt filled with used dependencies~~
 - [x] ~~Write unit tests for some part of the codebase and get code coverage~~
 - [x] ~~Get some continues integration running on the github repository~~

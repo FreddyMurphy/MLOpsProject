@@ -7,7 +7,7 @@ from torch_enhance import metrics
 
 class SRCNN(LightningModule):
     def __init__(self,
-                 scaling=4,
+                 scaling=2,
                  n_channels=3,
                  lr=0.001,
                  window_size=5,
@@ -45,8 +45,6 @@ class SRCNN(LightningModule):
         self.log("train_mae", mae)
         self.log("train_psnr", psnr)
 
-        # TODO: Accuracy
-
         return loss
 
     # Very much similar to training step
@@ -69,8 +67,6 @@ class SRCNN(LightningModule):
         self.log("val_mae", mae)
         self.log("val_psnr", psnr)
 
-        # TODO: Accuracy
-
         return loss
 
     # Very much similar to training step
@@ -91,7 +87,5 @@ class SRCNN(LightningModule):
         self.log("test_loss", loss)
         self.log("test_mae", mae)
         self.log("test_psnr", psnr)
-
-        # TODO: Accuracy
 
         return loss

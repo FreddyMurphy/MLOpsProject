@@ -1,6 +1,5 @@
 import json
 
-import kornia
 import matplotlib.pyplot as plt
 import numpy as np
 import requests
@@ -29,7 +28,7 @@ with Image.open('./data/raw/DIV2K_valid_HR/0801.png') as img:
     transform = Compose([
         ToTensor(),
         kornia.geometry.Resize((256, 256), align_corners=False),
-        kornia.geometry.Rescale(0.25)
+        kornia.geometry.Rescale(0.50)
     ])
     img = transform(img).unsqueeze_(0)
 

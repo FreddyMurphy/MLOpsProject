@@ -4,3 +4,4 @@ defaults:
   - training: exp1
   - session: train
   - hparams_search: optuna
+  - evaluate: exp1
