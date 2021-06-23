@@ -12,7 +12,10 @@ best_model = None
 min_loss = sys.float_info.max
 for model in Model.list(ws):
     if (model.name == 'div2k_model'):
-        loss = float(model.properties['val_loss'])
+        try:
+            loss = float(model.properties['val_loss'])
+        except:
+            continue
         if (loss < min_loss):
             min_loss = loss
             best_model = model
