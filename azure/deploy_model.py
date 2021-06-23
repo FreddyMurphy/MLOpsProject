@@ -1,11 +1,10 @@
 import os
+import sys
 
 from azureml.core import Workspace
 from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.model import InferenceConfig, Model
 from azureml.core.webservice import AciWebservice
-
-import sys
 
 ws = Workspace.from_config()
 
@@ -17,7 +16,6 @@ for model in Model.list(ws):
         if (loss < min_loss):
             min_loss = loss
             best_model = model
-
 
 # Takes newest model
 # model = ws.models['div2k_model']
