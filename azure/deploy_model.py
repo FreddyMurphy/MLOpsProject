@@ -18,7 +18,6 @@ for model in Model.list(ws):
             min_loss = loss
             best_model = model
 
-
 # Takes newest model
 ## model = ws.models['div2k_model']
 
