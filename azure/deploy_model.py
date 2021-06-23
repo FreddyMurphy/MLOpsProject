@@ -20,7 +20,7 @@ for model in Model.list(ws):
 
 
 # Takes newest model
-## model = ws.models['div2k_model']
+# model = ws.models['div2k_model']
 
 # Takes best model
 model = best_model

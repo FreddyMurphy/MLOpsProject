@@ -50,7 +50,7 @@ train-optuna:
 train-azure:
 	$(PYTHON_INTERPRETER) azure/run_config.py
 
-## Optimize hyperparameters using Optuna using Azure
+## Optimize hyperparameters using Optuna and Azure
 train-azure-optuna:
 	$(PYTHON_INTERPRETER) azure/run_config.py --multirun
 
