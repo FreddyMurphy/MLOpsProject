@@ -5,9 +5,27 @@ from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.model import InferenceConfig, Model
 from azureml.core.webservice import AciWebservice
 
+import sys
+
 ws = Workspace.from_config()
-model = ws.models['div2k_model']
-print(model.name, 'version:', model.version)
+
+best_model = None
+min_loss = sys.float_info.max
+for model in Model.list(ws):
+    if (model.name == 'div2k_model'):
+        loss = float(model.properties['val_loss'])
+        if (loss < min_loss):
+            min_loss = loss
+            best_model = model
+
+
+# Takes newest model
+## model = ws.models['div2k_model']
+
+# Takes best model
+model = best_model
+
+print("Deploying:", model.name, 'version:', model.version)
 
 folder_name = 'azure/upscale_service'
 experiment_folder = './' + folder_name

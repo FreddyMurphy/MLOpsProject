@@ -50,6 +50,10 @@ train-optuna:
 train-azure:
 	$(PYTHON_INTERPRETER) azure/run_config.py
 
+## Optimize hyperparameters using Optuna using Azure
+train-azure-optuna:
+	$(PYTHON_INTERPRETER) azure/run_config.py --multirun
+
 ## Evaluate a given model using DIV2K
 evaluate:
 	$(PYTHON_INTERPRETER) src/models/main.py session=evaluate
