@@ -87,10 +87,11 @@ if __name__ == '__main__':
     run.wait_for_completion(show_output=True)
 
     run.complete()
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Register the model
     run.download_file('outputs/div2k_model.ckpt', './outputs/div2k_model.ckpt')
-    checkpoint = torch.load('./outputs/div2k_model.ckpt')
+    checkpoint = torch.load('./outputs/div2k_model.ckpt', map_location=DEVICE)
 
     val_loss = None
     for key in checkpoint['callbacks'].keys():
